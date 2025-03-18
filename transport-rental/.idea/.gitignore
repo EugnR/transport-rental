@@ -1,0 +1,32 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+
+
+# IntelliJ IDEA
+.idea/
+!.idea/misc.xml
+!.idea/modules.xml
+
+# Скомпилированные файлы
+/out/
+
+# IntelliJ IDEA project file
+*.iml
+
+# Системные файлы
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# Операционные системы
+.DS_Store
+Thumbs.db
