@@ -16,6 +16,7 @@
 
 # Скомпилированные файлы
 /out/
+target
 
 # IntelliJ IDEA project file
 *.iml
