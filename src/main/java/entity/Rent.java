@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+/**
+ * Класс для аренды.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
