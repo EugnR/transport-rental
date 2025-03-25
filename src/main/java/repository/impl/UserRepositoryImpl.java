@@ -16,7 +16,7 @@ import repository.UserRepository;
 @Repository
 public final class UserRepositoryImpl implements UserRepository {
 
-    private static UserRepositoryImpl instanse;
+    private static UserRepositoryImpl instance;
 
     private final List<User> users = new ArrayList<User>();
 
@@ -30,10 +30,10 @@ public final class UserRepositoryImpl implements UserRepository {
      * Получение экземпляра репозитория.
      */
     public static UserRepositoryImpl getInstance() {
-        if (instanse == null) {
-            instanse = new UserRepositoryImpl();
+        if (instance == null) {
+            instance = new UserRepositoryImpl();
         }
-        return instanse;
+        return instance;
     }
 
 
