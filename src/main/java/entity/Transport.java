@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Transport {
+
     private long transportId;
     private long ownerId;
     private boolean canBeRented;

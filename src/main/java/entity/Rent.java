@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class Rent {
+
     private long rentId;
     private long transportId;
     private long userId;
