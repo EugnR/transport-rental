@@ -1,30 +1,14 @@
 package repository.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import entity.User;
 import repository.UserRepository;
 
-
 /**
- * Интерфейс для хранения объектов User.
+ * Интерфейс для хранения пользователей/аккаунтов.
  */
-@Repository
-public final class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryImpl extends CrudRepositoryImpl<User> implements UserRepository {
 
     private static UserRepositoryImpl instance;
-
-    private final List<User> users = new ArrayList<User>();
-
-
-    private UserRepositoryImpl() {
-
-    }
-
 
     /**
      * Получение экземпляра репозитория.
@@ -35,39 +19,4 @@ public final class UserRepositoryImpl implements UserRepository {
         }
         return instance;
     }
-
-
-    /**
-     * Сохранение пользователя.
-     */
-    @Override
-    public void save(User user) {
-        users.add(user);
-    }
-
-
-    /**
-     * Удаление пользователя.
-     */
-    @Override
-    public void delete(Long id) {
-        Optional<User> first = Optional.ofNullable(users.stream()
-                .filter(item -> item.getUserId() == id)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new));
-
-        first.ifPresent(users::remove);
-    }
-
-
-    /**
-     * Получение пользователя по id.
-     */
-    @Override
-    public Optional<User> getById(Long id) {
-        return users.stream()
-                .filter(item -> item.getUserId() == id)
-                .findFirst();
-    }
-
 }

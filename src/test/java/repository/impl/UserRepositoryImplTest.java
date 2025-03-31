@@ -1,13 +1,13 @@
 package repository.impl;
 
-import java.util.Optional;
-
+import entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import entity.User;
 import repository.UserRepository;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class UserRepositoryImplTest {
@@ -17,7 +17,7 @@ class UserRepositoryImplTest {
     void testShouldCreateUser() {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
         User createUser = User.builder()
-                .userId(1L)
+                .entityId(1L)
                 .userName("test")
                 .build();
         userRepository.save(createUser);
@@ -33,7 +33,7 @@ class UserRepositoryImplTest {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
         long id = 1L;
         User createUser = User.builder()
-                .userId(id)
+                .entityId(id)
                 .userName("test")
                 .build();
         userRepository.save(createUser);
