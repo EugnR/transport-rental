@@ -23,7 +23,7 @@ class UserRepositoryImplTest {
         userRepository.save(createUser);
         Optional<User> user = userRepository.getById(1L);
         assertTrue(user.isPresent());
-        userRepository.delete(1L);
+        userRepository.deleteById(1L);
     }
 
 
@@ -37,7 +37,7 @@ class UserRepositoryImplTest {
                 .userName("test")
                 .build();
         userRepository.save(createUser);
-        userRepository.delete(id);
+        userRepository.deleteById(id);
         Optional<User> user = userRepository.getById(id);
         assertTrue(user.isEmpty());
     }

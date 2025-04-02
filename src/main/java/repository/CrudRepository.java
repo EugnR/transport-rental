@@ -20,7 +20,7 @@ public interface CrudRepository<T> {
     /**
      * Удаление сущности.
      */
-    void delete(Long id);
+    void deleteById(Long id);
 
     /**
      * Получение сущности по id.

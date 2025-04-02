@@ -38,7 +38,7 @@ public abstract class CrudRepositoryImpl<T extends BaseEntity> implements CrudRe
     //TODO возможно удаление сущности должно проходить с проверкой, не ссылаются ли на него другие сущности
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Optional<BaseEntity> first = Optional.ofNullable(baseEntities.stream()
                 .filter(item -> item.getEntityId() == id)
                 .findFirst()

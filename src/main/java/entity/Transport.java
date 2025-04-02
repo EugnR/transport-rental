@@ -1,10 +1,10 @@
 package entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 /**
  * Класс для транспорта.
@@ -13,8 +13,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Transport {
+@SuperBuilder
+public class Transport extends BaseEntity {
 
     private long transportId;
     private long ownerId;
