@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class User extends BaseEntity {
 
+    //TODO решить, что делать с полем
     //private long userId; можно убрать тк в BaseEntity есть поле entityID?
     private String userName;
     private String password;

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 /**
  * Интерфейс с общими для всех сущностей операциями.
+ * От него наследуются профильные интерфейсы сущностей.
  */
 @Repository
 public interface CrudRepository<T> {

@@ -16,7 +16,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Transport extends BaseEntity {
 
-    private long transportId;
+    //TODO решить, что делать с полем
+//    private long transportId; можно убрать тк в BaseEntity есть поле entityID?
     private long ownerId;
     private boolean canBeRented;
     private String transportType;

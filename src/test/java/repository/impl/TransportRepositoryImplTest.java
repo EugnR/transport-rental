@@ -13,10 +13,10 @@ class TransportRepositoryImplTest {
 
     @Test
     @DisplayName("Test create transport")
-    void TestSave() {
+    void testShouldSaveTransport() {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
         Transport newTransport = Transport.builder()
-                .transportId(1L)
+                .entityId(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
@@ -37,11 +37,11 @@ class TransportRepositoryImplTest {
 
     @Test
     @DisplayName("Test delete transport")
-    void TestDeleteById() {
+    void testShouldDeleteTransportById() {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
         long id = 1L;
         Transport newTransport = Transport.builder()
-                .transportId(1L)
+                .entityId(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
