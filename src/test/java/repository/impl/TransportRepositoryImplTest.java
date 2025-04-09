@@ -16,7 +16,7 @@ class TransportRepositoryImplTest {
     void testShouldSaveTransport() {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
         Transport newTransport = Transport.builder()
-                .entityId(1L)
+                .id(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
@@ -26,8 +26,8 @@ class TransportRepositoryImplTest {
                 .description("тестовое описание")
                 .latitude(55.751244)
                 .longitude(37.618423)
-                .minutePrice(10)
-                .dayPrice(3500)
+                .minutePrice(10.0)
+                .dayPrice(3500.0)
                 .build();
         transportRepository.save(newTransport);
         Optional<Transport> transport = transportRepository.getById(1L);
@@ -41,7 +41,7 @@ class TransportRepositoryImplTest {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
         long id = 1L;
         Transport newTransport = Transport.builder()
-                .entityId(1L)
+                .id(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
@@ -51,8 +51,8 @@ class TransportRepositoryImplTest {
                 .description("тестовое описание")
                 .latitude(55.751244)
                 .longitude(37.618423)
-                .minutePrice(10)
-                .dayPrice(3500)
+                .minutePrice(10.0)
+                .dayPrice(3500.0)
                 .build();
         transportRepository.save(newTransport);
         transportRepository.deleteById(1L);
