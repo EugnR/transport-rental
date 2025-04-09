@@ -16,7 +16,6 @@ class TransportRepositoryImplTest {
     void testShouldSaveTransport() {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
         Transport newTransport = Transport.builder()
-                .id(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
@@ -30,18 +29,16 @@ class TransportRepositoryImplTest {
                 .dayPrice(3500.0)
                 .build();
         transportRepository.save(newTransport);
-        Optional<Transport> transport = transportRepository.getById(1L);
+        Optional<Transport> transport = transportRepository.getById(newTransport.getId());
         assertTrue(transport.isPresent());
-        transportRepository.deleteById(1L);
+        transportRepository.deleteById(newTransport.getId());
     }
 
     @Test
     @DisplayName("Test delete transport")
     void testShouldDeleteTransportById() {
         TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
-        long id = 1L;
         Transport newTransport = Transport.builder()
-                .id(1L)
                 .ownerId(1L)
                 .canBeRented(true)
                 .transportType("Car")
@@ -55,8 +52,8 @@ class TransportRepositoryImplTest {
                 .dayPrice(3500.0)
                 .build();
         transportRepository.save(newTransport);
-        transportRepository.deleteById(1L);
-        Optional<Transport> transport = transportRepository.getById(1L);
+        transportRepository.deleteById(newTransport.getId());
+        Optional<Transport> transport = transportRepository.getById(newTransport.getId());
         assertTrue(transport.isEmpty());
     }
 
