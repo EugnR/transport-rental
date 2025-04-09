@@ -14,14 +14,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class User extends BaseEntity {
+public class User extends AbstractBaseEntity {
 
-    //TODO решить, что делать с полем
-    //private long userId; можно убрать тк в BaseEntity есть поле entityID?
     private String userName;
     private String password;
-    private boolean isAdmin;
-    private double balance;
+    private Boolean isAdmin;
+    private Double balance;
 
 
 }

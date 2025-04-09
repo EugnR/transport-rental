@@ -14,21 +14,19 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class Transport extends BaseEntity {
+public class Transport extends AbstractBaseEntity {
 
-    //TODO решить, что делать с полем
-//    private long transportId; можно убрать тк в BaseEntity есть поле entityID?
-    private long ownerId;
-    private boolean canBeRented;
+    private Long ownerId;
+    private Boolean canBeRented;
     private String transportType;
     private String model;
     private String color;
     private String identifier;
     private String description;
-    private double latitude;
-    private double longitude;
-    private double minutePrice;
-    private double dayPrice;
+    private Double latitude;
+    private Double longitude;
+    private Double minutePrice;
+    private Double dayPrice;
 
 
 }
