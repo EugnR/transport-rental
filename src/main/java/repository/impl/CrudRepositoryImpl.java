@@ -1,6 +1,6 @@
 package repository.impl;
 
-import entity.BaseEntity;
+import entity.AbstractBaseEntity;
 import org.springframework.stereotype.Repository;
 import repository.CrudRepository;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  * Интерфейс для хранения сущностей.
  */
 @Repository
-public abstract class CrudRepositoryImpl<T extends BaseEntity> implements CrudRepository<T> {
+public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implements CrudRepository<T> {
 
     private final List<T> baseEntities = new ArrayList<>();
 
@@ -39,8 +39,8 @@ public abstract class CrudRepositoryImpl<T extends BaseEntity> implements CrudRe
 
     @Override
     public void deleteById(Long id) {
-        Optional<BaseEntity> first = Optional.ofNullable(baseEntities.stream()
-                .filter(item -> item.getEntityId() == id)
+        Optional<AbstractBaseEntity> first = Optional.ofNullable(baseEntities.stream()
+                .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new));
 
@@ -54,7 +54,7 @@ public abstract class CrudRepositoryImpl<T extends BaseEntity> implements CrudRe
     @Override
     public Optional<T> getById(Long id) {
         return baseEntities.stream()
-                .filter(item -> item.getEntityId() == id)
+                .filter(item -> item.getId().equals(id))
                 .findFirst();
     }
 

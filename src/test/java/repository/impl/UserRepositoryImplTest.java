@@ -17,7 +17,7 @@ class UserRepositoryImplTest {
     void testShouldCreateUser() {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
         User createUser = User.builder()
-                .entityId(1L)
+                .id(1L)
                 .userName("test")
                 .build();
         userRepository.save(createUser);
@@ -33,7 +33,7 @@ class UserRepositoryImplTest {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
         long id = 1L;
         User createUser = User.builder()
-                .entityId(id)
+                .id(id)
                 .userName("test")
                 .build();
         userRepository.save(createUser);
