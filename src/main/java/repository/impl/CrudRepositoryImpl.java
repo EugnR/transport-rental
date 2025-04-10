@@ -28,6 +28,7 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
      */
     @Override
     public void save(T baseEntity) {
+        baseEntity.setId((long) baseEntities.size() + 1);
         baseEntities.add(baseEntity);
     }
 
