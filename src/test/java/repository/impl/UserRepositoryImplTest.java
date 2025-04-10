@@ -16,14 +16,13 @@ class UserRepositoryImplTest {
     @DisplayName("Test create user")
     void testShouldCreateUser() {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
-        User createUser = User.builder()
-                .id(1L)
+        User newUser = User.builder()
                 .userName("test")
                 .build();
-        userRepository.save(createUser);
-        Optional<User> user = userRepository.getById(1L);
+        userRepository.save(newUser);
+        Optional<User> user = userRepository.getById(newUser.getId());
         assertTrue(user.isPresent());
-        userRepository.deleteById(1L);
+        userRepository.deleteById(newUser.getId());
     }
 
 
@@ -31,14 +30,12 @@ class UserRepositoryImplTest {
     @DisplayName("Test delete user")
     void testShouldDeleteUser() {
         UserRepository userRepository = UserRepositoryImpl.getInstance();
-        long id = 1L;
-        User createUser = User.builder()
-                .id(id)
+        User newUser = User.builder()
                 .userName("test")
                 .build();
-        userRepository.save(createUser);
-        userRepository.deleteById(id);
-        Optional<User> user = userRepository.getById(id);
+        userRepository.save(newUser);
+        userRepository.deleteById(newUser.getId());
+        Optional<User> user = userRepository.getById(newUser.getId());
         assertTrue(user.isEmpty());
     }
 

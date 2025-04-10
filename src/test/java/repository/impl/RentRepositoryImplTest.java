@@ -18,7 +18,7 @@ class RentRepositoryImplTest {
         RentRepository rentRepository = RentRepositoryImpl.getInstance();
         Rent newRent = Rent.builder()
                 .transportId(1L)
-                .id(1L)
+                .userId(1L)
                 .timeStart(LocalDateTime.parse("2025-04-02T12:00:00"))
                 .timeEnd(LocalDateTime.parse("2025-04-02T13:00:00"))
                 .priceOfUnit(10.0)
@@ -26,7 +26,7 @@ class RentRepositoryImplTest {
                 .finalPrice(600.0)
                 .build();
         rentRepository.save(newRent);
-        Optional<Rent> rent = rentRepository.getById(1L);
+        Optional<Rent> rent = rentRepository.getById(newRent.getId());
         assertTrue(rent.isPresent());
         rentRepository.deleteById(1L);
 
@@ -38,7 +38,7 @@ class RentRepositoryImplTest {
         RentRepository rentRepository = RentRepositoryImpl.getInstance();
         Rent newRent = Rent.builder()
                 .transportId(1L)
-                .id(1L)
+                .userId(1L)
                 .timeStart(LocalDateTime.parse("2025-04-02T12:00:00"))
                 .timeEnd(LocalDateTime.parse("2025-04-02T13:00:00"))
                 .priceOfUnit(10.0)
@@ -46,8 +46,8 @@ class RentRepositoryImplTest {
                 .finalPrice(600.0)
                 .build();
         rentRepository.save(newRent);
-        rentRepository.deleteById(1L);
-        Optional<Rent> rent = rentRepository.getById(1L);
+        rentRepository.deleteById(newRent.getId());
+        Optional<Rent> rent = rentRepository.getById(newRent.getId());
         assertTrue(rent.isEmpty());
     }
 }
