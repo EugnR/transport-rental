@@ -5,6 +5,7 @@ import repository.TransportRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Интерфейс для хранения транспортных средств.
@@ -47,4 +48,15 @@ public class TransportRepositoryImpl extends CrudRepositoryImpl<Transport> imple
     }
 
 
+    /**
+     * Получение списка транспорта по id пользователя
+     * @param userId айдишник пользователя, по которому ведётся поиск
+     * @return список транспортов связанных с пользователем
+     */
+    @Override
+    public List<Transport> findByUserId(Long userId) {
+        return getAll().stream()
+                .filter(transport -> transport.getOwnerId().equals(userId))
+                .collect(Collectors.toList());
+    }
 }

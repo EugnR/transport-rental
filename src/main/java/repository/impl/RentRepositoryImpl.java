@@ -48,4 +48,11 @@ public class RentRepositoryImpl extends CrudRepositoryImpl<Rent> implements Rent
                 .filter(rent -> rent.getTransportId().equals(transportId))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Rent> findByUserId(Long userId) {
+        return getAll().stream()
+                .filter(rent -> rent.getUserId().equals(userId))
+                .collect(Collectors.toList());
+    }
 }
