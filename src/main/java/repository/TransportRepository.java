@@ -10,7 +10,7 @@ import java.util.List;
 public interface TransportRepository extends CrudRepository<Transport> {
 
     /**
-     * Получение списка транспорта по id пользователя
+     * Получение списка транспорта по id пользователя.
      * @param userId айдишник пользователя, по которому ведётся поиск
      * @return список транспортов связанных с пользователем
      */

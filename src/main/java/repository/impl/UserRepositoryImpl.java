@@ -28,23 +28,23 @@ public class UserRepositoryImpl extends CrudRepositoryImpl<User> implements User
 
 
     /**
-     * Удаление пользователя по id
+     * Удаление пользователя по id.
      * @param id айдишник удаляемого пользователя
      */
     @Override
-    public void deleteById(Long id) {
-        boolean hasRents = !rentRepository.findByUserId(id).isEmpty();
-        boolean hasTransports = !transportRepository.findByUserId(id).isEmpty();
+    public void deleteById(final Long id) {
+        final boolean hasRents = !rentRepository.findByUserId(id).isEmpty();
+        final boolean hasTransports = !transportRepository.findByUserId(id).isEmpty();
 
         if (hasRents) {
             throw new IllegalStateException("Невозможно удалить пользователя: существуют аренды с этим пользователем.");
         }
-        if(hasTransports) {
+        if (hasTransports) {
             throw new IllegalStateException("Невозможно удалить пользователя: есть зарегистрированный на него транспорт.");
         }
 
-        List<User> listOfUsers = super.getAll();
-        Optional<User> first = Optional.ofNullable(listOfUsers.stream()
+        final List<User> listOfUsers = super.getAll();
+        final Optional<User> first = Optional.ofNullable(listOfUsers.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с id " + id + " не найден")));

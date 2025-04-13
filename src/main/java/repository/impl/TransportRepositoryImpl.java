@@ -32,15 +32,15 @@ public class TransportRepositoryImpl extends CrudRepositoryImpl<Transport> imple
      * @param id айдишник удаляемого транспорта.
      */
     @Override
-    public void deleteById(Long id) {
-        boolean hasRents = !rentRepository.findByTransportId(id).isEmpty();
+    public void deleteById(final Long id) {
+        final boolean hasRents = !rentRepository.findByTransportId(id).isEmpty();
 
         if (hasRents) {
             throw new IllegalStateException("Невозможно удалить транспорт: существуют аренды с этим транспортом.");
         }
 
-        List<Transport> listOfTransports = super.getAll();
-        Optional<Transport> first = Optional.ofNullable(listOfTransports.stream()
+        final List<Transport> listOfTransports = super.getAll();
+        final Optional<Transport> first = Optional.ofNullable(listOfTransports.stream()
                 .filter(transport -> transport.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Транспорт с id " + id + " не найден")));
@@ -49,12 +49,12 @@ public class TransportRepositoryImpl extends CrudRepositoryImpl<Transport> imple
 
 
     /**
-     * Получение списка транспорта по id пользователя
+     * Получение списка транспорта по id пользователя.
      * @param userId айдишник пользователя, по которому ведётся поиск
      * @return список транспортов связанных с пользователем
      */
     @Override
-    public List<Transport> findByUserId(Long userId) {
+    public List<Transport> findByUserId(final Long userId) {
         return getAll().stream()
                 .filter(transport -> transport.getOwnerId().equals(userId))
                 .collect(Collectors.toList());

@@ -28,9 +28,9 @@ public class RentRepositoryImpl extends CrudRepositoryImpl<Rent> implements Rent
      * @param id айдишник удаляемой аренды.
      */
     @Override
-    public void deleteById(Long id) {
-        List<Rent> listOfRents = super.getAll();
-        Optional<Rent> first = Optional.ofNullable(listOfRents.stream()
+    public void deleteById(final Long id) {
+        final List<Rent> listOfRents = super.getAll();
+        final Optional<Rent> first = Optional.ofNullable(listOfRents.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new));
@@ -43,14 +43,14 @@ public class RentRepositoryImpl extends CrudRepositoryImpl<Rent> implements Rent
      * @return список найденных аренд.
      */
     @Override
-    public List<Rent> findByTransportId(Long transportId) {
+    public List<Rent> findByTransportId(final Long transportId) {
         return getAll().stream()
                 .filter(rent -> rent.getTransportId().equals(transportId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Rent> findByUserId(Long userId) {
+    public List<Rent> findByUserId(final Long userId) {
         return getAll().stream()
                 .filter(rent -> rent.getUserId().equals(userId))
                 .collect(Collectors.toList());
