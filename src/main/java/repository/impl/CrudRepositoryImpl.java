@@ -27,7 +27,7 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
      * Сохранение сущности.
      */
     @Override
-    public void save(T baseEntity) {
+    public void save(final T baseEntity) {
         baseEntity.setId((long) baseEntities.size() + 1);
         baseEntities.add(baseEntity);
     }
@@ -36,11 +36,9 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
     /**
      * Удаление сущности.
      */
-    //TODO возможно удаление сущности должно проходить с проверкой, не ссылаются ли на него другие сущности
-
     @Override
-    public void deleteById(Long id) {
-        Optional<AbstractBaseEntity> first = Optional.ofNullable(baseEntities.stream()
+    public void deleteById(final Long id) {
+        final Optional<AbstractBaseEntity> first = Optional.ofNullable(baseEntities.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new));
@@ -53,7 +51,7 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
      * Получение сущности по id.
      */
     @Override
-    public Optional<T> getById(Long id) {
+    public Optional<T> getById(final Long id) {
         return baseEntities.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst();
@@ -62,6 +60,7 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
     /**
      * Получение списка всех сущностей.
      */
+    @Override
     public List<T> getAll() {
         return baseEntities;
     }
