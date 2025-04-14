@@ -36,8 +36,6 @@ public abstract class CrudRepositoryImpl<T extends AbstractBaseEntity> implement
     /**
      * Удаление сущности.
      */
-    //TODO возможно удаление сущности должно проходить с проверкой, не ссылаются ли на него другие сущности
-
     @Override
     public void deleteById(final Long id) {
         final Optional<AbstractBaseEntity> first = Optional.ofNullable(baseEntities.stream()
