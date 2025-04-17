@@ -1,5 +1,7 @@
 package ru.transport.rent.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@Entity
+@Table(name = "users")
 public class User extends AbstractBaseEntity {
 
     private String userName;

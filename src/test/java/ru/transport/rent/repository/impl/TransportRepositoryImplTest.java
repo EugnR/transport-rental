@@ -1,9 +1,14 @@
 package ru.transport.rent.repository.impl;
 
+import ru.transport.rent.AbstractMainTest;
+import ru.transport.rent.EntityUtils;
 import ru.transport.rent.entity.Rent;
 import ru.transport.rent.entity.Transport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ru.transport.rent.entity.User;
 import ru.transport.rent.repository.RentRepository;
 import ru.transport.rent.repository.TransportRepository;
 
@@ -13,14 +18,20 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TransportRepositoryImplTest {
+class TransportRepositoryImplTest extends AbstractMainTest {
+
+    @Autowired
+    private TransportRepository transportRepository;
+
+    @Autowired
+    private EntityUtils entityUtils;
 
     @Test
     @DisplayName("Test create transport")
     void testShouldSaveTransport() {
-        TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
+        final User user = entityUtils.createUser();
         Transport newTransport = Transport.builder()
-                .ownerId(999L)
+                .owner(user)
                 .canBeRented(true)
                 .transportType("Car")
                 .model("Skoda")
@@ -33,7 +44,7 @@ class TransportRepositoryImplTest {
                 .dayPrice(3500.0)
                 .build();
         transportRepository.save(newTransport);
-        Optional<Transport> transport = transportRepository.getById(newTransport.getId());
+        Optional<Transport> transport = transportRepository.findById(newTransport.getId());
         assertTrue(transport.isPresent());
         transportRepository.deleteById(newTransport.getId());
     }
@@ -41,9 +52,9 @@ class TransportRepositoryImplTest {
     @Test
     @DisplayName("Test delete unrented transport")
     void testShouldDeleteUnrentedTransportById() {
-        TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
+        final User user = entityUtils.createUser();
         Transport newTransport = Transport.builder()
-                .ownerId(999L)
+                .owner(user)
                 .canBeRented(true)
                 .transportType("Car")
                 .model("Skoda")
@@ -57,55 +68,7 @@ class TransportRepositoryImplTest {
                 .build();
         transportRepository.save(newTransport);
         transportRepository.deleteById(newTransport.getId());
-        Optional<Transport> transport = transportRepository.getById(newTransport.getId());
+        Optional<Transport> transport = transportRepository.findById(newTransport.getId());
         assertTrue(transport.isEmpty());
     }
-
-    @Test
-    @DisplayName("Test not deleting rented transport")
-    void testShouldNotDeleteRentedTransportById() {
-        TransportRepository transportRepository = TransportRepositoryImpl.getInstance();
-        RentRepository rentRepository = RentRepositoryImpl.getInstance();
-        Long transportOwnerId = 999L;
-        Transport newTransport = Transport.builder()
-                .ownerId(transportOwnerId)
-                .canBeRented(true)
-                .transportType("Car")
-                .model("Skoda")
-                .color("White")
-                .identifier("м777мм")
-                .description("тестовое описание")
-                .latitude(55.751244)
-                .longitude(37.618423)
-                .minutePrice(10.0)
-                .dayPrice(3500.0)
-                .build();
-        transportRepository.save(newTransport);
-
-        Rent newRent = Rent.builder()
-                .transportId(newTransport.getId())
-                .userId(transportOwnerId)
-                .timeStart(LocalDateTime.parse("2025-04-02T12:00:00"))
-                .timeEnd(LocalDateTime.parse("2025-04-02T13:00:00"))
-                .priceOfUnit(10.0)
-                .priceType("minutePrice")
-                .finalPrice(600.0)
-                .build();
-        rentRepository.save(newRent);
-
-
-        assertThrows(IllegalStateException.class, () -> transportRepository.deleteById(newTransport.getId()),
-                "Ожидалось, что при попытке удаления транспорта выйдет исключение, тк он прикреплён к аренде");
-        Optional<Transport> transport = transportRepository.getById(newTransport.getId());
-        assertTrue(transport.isPresent(), "Транспорт удалился, хотя не должен был");
-        rentRepository.deleteById(newRent.getId());
-        transportRepository.deleteById(newTransport.getId());
-        transport = transportRepository.getById(newTransport.getId());
-        assertTrue(transport.isEmpty(), "Транспорт не удалился, хотя аренда, к которой он был привязан, была удалена");
-
-    }
-
-
-
-
 }

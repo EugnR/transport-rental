@@ -4,10 +4,15 @@ import ru.transport.rent.entity.Rent;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
 /**
  * Интерфейс для репозитория Rent(аренда) с его особыми для него запросами.
  */
-public interface RentRepository extends CrudRepository<Rent> {
+@Repository
+public interface RentRepository extends JpaRepository<Rent, Long> {
 
     /**
      * Получение списка аренд по id транспорта.
