@@ -1,4 +1,4 @@
-package entity;
+package ru.transport.rent.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

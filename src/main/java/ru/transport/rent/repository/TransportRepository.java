@@ -1,6 +1,6 @@
-package repository;
+package ru.transport.rent.repository;
 
-import entity.Transport;
+import ru.transport.rent.entity.Transport;
 
 import java.util.List;
 

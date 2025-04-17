@@ -1,13 +1,13 @@
-package repository.impl;
+package ru.transport.rent.repository.impl;
 
-import entity.Rent;
-import entity.Transport;
-import entity.User;
+import ru.transport.rent.entity.Rent;
+import ru.transport.rent.entity.Transport;
+import ru.transport.rent.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import repository.RentRepository;
-import repository.TransportRepository;
-import repository.UserRepository;
+import ru.transport.rent.repository.RentRepository;
+import ru.transport.rent.repository.TransportRepository;
+import ru.transport.rent.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

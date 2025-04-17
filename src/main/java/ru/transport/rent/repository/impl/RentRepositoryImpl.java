@@ -1,7 +1,7 @@
-package repository.impl;
+package ru.transport.rent.repository.impl;
 
-import entity.Rent;
-import repository.RentRepository;
+import ru.transport.rent.entity.Rent;
+import ru.transport.rent.repository.RentRepository;
 
 import java.util.List;
 import java.util.Optional;

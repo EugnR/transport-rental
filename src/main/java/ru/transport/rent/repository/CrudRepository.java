@@ -1,4 +1,4 @@
-package repository;
+package ru.transport.rent.repository;
 
 import org.springframework.stereotype.Repository;
 

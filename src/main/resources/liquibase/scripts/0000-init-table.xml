@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="init-table-1" author="vshabaev">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_admin" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="DECIMAL(19,2)" defaultValue="0.00">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Добавляем индекс для имени пользователя -->
+        <createIndex tableName="users" indexName="idx_user_name">
+            <column name="user_name"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="init-table-2" author="vshabaev">
+        <createTable tableName="transport">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="owner_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="can_be_rented" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transport_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="color" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="identifier" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="latitude" type="DECIMAL(10,8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="longitude" type="DECIMAL(11,8)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="minute_price" type="DECIMAL(10,2)"/>
+            <column name="day_price" type="DECIMAL(10,2)"/>
+        </createTable>
+
+        <!-- Добавляем внешний ключ на таблицу пользователей -->
+        <addForeignKeyConstraint baseTableName="transport"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_transport_owner"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="init-table-3" author="vshabaev">
+        <createTable tableName="rent">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transport_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_start" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time_end" type="TIMESTAMP"/>
+            <column name="price_of_unit" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="final_price" type="DECIMAL(19,2)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="rent"
+                                 baseColumnNames="transport_id"
+                                 constraintName="fk_rent_transport"
+                                 referencedTableName="transport"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="rent"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_rent_user"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

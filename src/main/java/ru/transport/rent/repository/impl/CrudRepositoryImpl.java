@@ -1,8 +1,8 @@
-package repository.impl;
+package ru.transport.rent.repository.impl;
 
-import entity.AbstractBaseEntity;
+import ru.transport.rent.entity.AbstractBaseEntity;
 import org.springframework.stereotype.Repository;
-import repository.CrudRepository;
+import ru.transport.rent.repository.CrudRepository;
 
 import java.util.ArrayList;
 import java.util.List;
