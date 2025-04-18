@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:16-bookworm  # Оптимизирован для AMD64
+    platform: linux/amd64        # Явное указание архитектуры
+    container_name: postgres_amd64
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: simbirgo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_amd64:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data_amd64:
