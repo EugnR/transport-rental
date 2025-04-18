@@ -41,3 +41,9 @@ logging:
               BasicBinder: TRACE
               BasicExtractor: TRACE
         SQL: DEBUG
+
+jwt:
+  subject: user
+  issuer: course
+  secret: J7gzxsdfdsdsfsklill234czxcQgfJ7gQgfczxc
+  tokenExpiresIn: 432000

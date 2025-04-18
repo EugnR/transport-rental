@@ -6,4 +6,6 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
 <include file="liquibase/scripts/0000-init-table.xml"/>
+<include file="liquibase/scripts/0001-add-table-role.xml"/>
+<include file="liquibase/scripts/0002-insert-data-for-table-role.xml"/>
 </databaseChangeLog>

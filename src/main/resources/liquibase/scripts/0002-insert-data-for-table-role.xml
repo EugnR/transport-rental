@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="insert-data-for-table-role-1" author="vshabaev">
+        <comment>Добавление базовых ролей в таблицу roles</comment>
+
+        <insert tableName="roles">
+            <column name="id" value="1"/>
+            <column name="name" value="ROLE_ADMIN"/>
+            <column name="description" value="Администратор системы"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="id" value="2"/>
+            <column name="name" value="ROLE_USER"/>
+            <column name="description" value="Обычный пользователь"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="id" value="3"/>
+            <column name="name" value="ROLE_MODERATOR"/>
+            <column name="description" value="Модератор системы"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

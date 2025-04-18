@@ -31,7 +31,7 @@
     </properties>
 
 
-        <dependencies>
+    <dependencies>
         <!-- Framework dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,16 +52,16 @@
             <artifactId>liquibase-core</artifactId>
             <version>4.29.1</version>
         </dependency>
-            <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-annotations-jakarta</artifactId>
-                <version>2.2.22</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>2.6.0</version> <!-- Если обновляете: обновите и swagger-annotations-jakarta -->
-            </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <version>2.2.22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version> <!-- Если обновляете: обновите и swagger-annotations-jakarta -->
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
@@ -71,6 +71,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.5.0</version>
         </dependency>
 
 
@@ -133,7 +138,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        </dependencies>
+    </dependencies>
 
 
     <build>
