@@ -10,19 +10,16 @@
         <insert tableName="roles">
             <column name="id" value="1"/>
             <column name="name" value="ROLE_ADMIN"/>
-            <column name="description" value="Администратор системы"/>
         </insert>
 
         <insert tableName="roles">
             <column name="id" value="2"/>
             <column name="name" value="ROLE_USER"/>
-            <column name="description" value="Обычный пользователь"/>
         </insert>
 
         <insert tableName="roles">
             <column name="id" value="3"/>
             <column name="name" value="ROLE_MODERATOR"/>
-            <column name="description" value="Модератор системы"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

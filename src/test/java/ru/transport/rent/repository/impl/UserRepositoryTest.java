@@ -3,6 +3,7 @@ package ru.transport.rent.repository.impl;
 import ru.transport.rent.AbstractMainTest;
 import ru.transport.rent.EntityUtils;
 import ru.transport.rent.entity.Rent;
+import ru.transport.rent.entity.Role;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ class UserRepositoryTest extends AbstractMainTest {
         User newUser = User.builder()
                 .userName("test")
                 .password("test")
-                .isAdmin(false)
+                .role(Role.builder().id(2L).build())
                 .balance(100.0)
                 .build();
         userRepository.save(newUser);
@@ -49,7 +50,7 @@ class UserRepositoryTest extends AbstractMainTest {
         User newUser = User.builder()
                 .userName("test")
                 .password("test")
-                .isAdmin(false)
+                .role(Role.builder().id(2L).build())
                 .balance(100.0)
                 .build();
         userRepository.save(newUser);

@@ -10,7 +10,7 @@ import ru.transport.rent.entity.User;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    //особых запросов пока нет
+
 
 
 }

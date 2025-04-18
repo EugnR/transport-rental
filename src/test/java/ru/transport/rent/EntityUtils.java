@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.transport.rent.entity.Rent;
+import ru.transport.rent.entity.Role;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.repository.RentRepository;
@@ -31,7 +32,9 @@ public class EntityUtils {
                 .userName("admin")
                 .password("admin")
                 .balance(0.0)
-                .isAdmin(Boolean.FALSE)
+                .role(Role.builder()
+                        .id(1L)
+                        .build())
                 .build());
     }
 
@@ -62,7 +65,7 @@ public class EntityUtils {
                 .timeStart(LocalDateTime.now())
                 .timeEnd(LocalDateTime.now()
                         .plusHours(1L))
-                        .finalPrice(100.0)
+                .finalPrice(100.0)
                 .build());
     }
 
