@@ -8,4 +8,5 @@
 <include file="liquibase/scripts/0000-init-table.xml"/>
 <include file="liquibase/scripts/0001-add-table-role.xml"/>
 <include file="liquibase/scripts/0002-insert-data-for-table-role.xml"/>
+<include file="liquibase/scripts/0003-alter-table-users.xml"/>
 </databaseChangeLog>

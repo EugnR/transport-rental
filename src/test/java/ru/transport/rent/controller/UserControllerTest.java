@@ -45,12 +45,23 @@ public class UserControllerTest extends AbstractMainTest {
     @Test
     @DisplayName("sing in user")
     public void testShouldGiveJwtTokenUser() throws Exception {
-        final String jsonFromResource = CommonUtils.getJsonFromResource("user-controller/RequestSingInUser.json");
+        final String registrationJson = CommonUtils.getJsonFromResource("user-controller/RequestRegistrationUser.json");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/user/registration")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonFromResource)
+                                .content(registrationJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+
+        final String authJson = CommonUtils.getJsonFromResource("user-controller/RequestSingInUser.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/user/sing-in")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status()

@@ -1,6 +1,7 @@
 package ru.transport.rent.testservices;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,13 @@ public class DropDbTestService implements InitializingBean {
         List<String> tableNames = entityManager.createNativeQuery(
                         "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
                 .getResultList();
-        tableNamesString = String.join(",", tableNames);
+
+        List<String> tablesToExclude = List.of("roles"); // или Arrays.asList()
+        List<String> filteredTableNames = tableNames.stream()
+                .filter(tableName -> !tablesToExclude.contains(tableName))
+                .collect(Collectors.toList());
+
+        tableNamesString = String.join(",", filteredTableNames);
     }
 
 }

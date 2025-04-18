@@ -13,6 +13,9 @@ import ru.transport.rent.entity.User;
 import lombok.Getter;
 
 
+/**
+ * Реализация UserDetails.
+ */
 @Getter
 public class UserDetailsImpl implements UserDetails {
 

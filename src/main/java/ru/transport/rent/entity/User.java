@@ -1,5 +1,6 @@
 package ru.transport.rent.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,13 +23,17 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "users")
 public class User extends AbstractBaseEntity {
 
+    @Column(name = "user_name")
     private String userName;
+
+    @Column(name = "password")
     private String password;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
+    @Column(name = "balance")
     private Double balance;
 
 

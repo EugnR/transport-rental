@@ -23,15 +23,22 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * SecurityConfiguration.
+ */
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
 
+    public static final String ALL = "*";
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtRequestFilter jwtRequestFilter;
 
+    /**
+     * SecurityConfiguration.
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -40,8 +47,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/swagger-ui.html", "/v2/api-docs", "/webjars/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/swagger-ui.html", "/v2/api-docs", "/webjars/**")
+                        .permitAll()
+                        .anyRequest()
+                        .permitAll()
                 )
                 .sessionManagement(
                         (sessionManagement) -> sessionManagement
@@ -51,25 +60,35 @@ public class SecurityConfiguration {
                 .build();
     }
 
+    /**
+     * SecurityConfiguration.
+     */
     @Bean
     AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
         AuthenticationManagerBuilder builder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        builder.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
 
         return builder.build();
     }
 
+    /**
+     * SecurityConfiguration.
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * SecurityConfiguration.
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("*"));
-        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of(ALL));
+        corsConfiguration.setAllowedMethods(List.of(ALL));
+        corsConfiguration.setAllowedHeaders(List.of(ALL));
         corsConfiguration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);

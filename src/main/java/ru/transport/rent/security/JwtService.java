@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * JwtService.
+ */
 @Component
 public class JwtService {
 
@@ -26,9 +29,13 @@ public class JwtService {
     @Value("${jwt.subject}")
     private String subject;
 
-
+    /**
+     * JwtService.
+     */
     public String generateToken(String username, String role, int expiresIn) {
-        Date expirationDate = Date.from(ZonedDateTime.now().plusSeconds(expiresIn).toInstant());
+        Date expirationDate = Date.from(ZonedDateTime.now()
+                .plusSeconds(expiresIn)
+                .toInstant());
         return JWT.create()
                 .withSubject(subject)
                 .withClaim("username", username)
@@ -39,6 +46,9 @@ public class JwtService {
                 .sign(Algorithm.HMAC256(secret));
     }
 
+    /**
+     * JwtService.
+     */
     public Optional<String> validateTokenAndRetrieveClaim(String token) {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
@@ -48,7 +58,8 @@ public class JwtService {
 
             DecodedJWT decodedJWT = verifier.verify(token);
 
-            return Optional.of(decodedJWT.getClaim("username").asString());
+            return Optional.of(decodedJWT.getClaim("username")
+                    .asString());
         } catch (JWTVerificationException e) {
             return Optional.empty();
         }

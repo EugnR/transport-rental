@@ -16,12 +16,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Создания кастомного фильтра для jwt.
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    public static final int BEGIN_INDEX = 7;
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -41,15 +46,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+
     private Optional<String> extractUsername(String header) {
         if (header == null || header.isBlank()) {
             return Optional.empty();
         }
 
         return jwtService.validateTokenAndRetrieveClaim(
-                header.substring(7)
+                header.substring(BEGIN_INDEX)
         );
     }
+
 
     private void setAuthenticatedAs(String username) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);

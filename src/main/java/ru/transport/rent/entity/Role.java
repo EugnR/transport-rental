@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractBaseEntity{
+public class Role extends AbstractBaseEntity {
 
     private String name;
 

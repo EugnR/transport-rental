@@ -13,6 +13,9 @@ import ru.transport.rent.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Создание кастомного сервиса UserDetails.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -20,6 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
 
+    /**
+     * Метод для нахождения пользователя по username.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
