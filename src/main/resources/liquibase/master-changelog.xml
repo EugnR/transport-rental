@@ -9,4 +9,6 @@
 <include file="liquibase/scripts/0001-add-table-role.xml"/>
 <include file="liquibase/scripts/0002-insert-data-for-table-role.xml"/>
 <include file="liquibase/scripts/0003-alter-table-users.xml"/>
+<include file="liquibase/scripts/0004-delete-role-in-table-role.xml"/>
+
 </databaseChangeLog>
