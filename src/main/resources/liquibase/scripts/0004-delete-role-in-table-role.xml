@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="delete-role-in-table-role-1" author="EugnR">
+        <comment>Удаление лишней роли ROLE_MODERATOR</comment>
+        <delete tableName="roles">
+            <where>id = 3</where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>
