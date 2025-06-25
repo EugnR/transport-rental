@@ -1,7 +1,10 @@
 package ru.transport.rent.service.user;
 
+import java.security.Principal;
+
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
-import ru.transport.rent.dto.user.RequestSingInUserDTO;
+import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUserDetailsDTO;
 
 
 /**
@@ -17,6 +20,12 @@ public interface UserService {
     /**
      * Метод для получения JWT токена.
      */
-    String singInUser(RequestSingInUserDTO requestSingInUserDTO);
+    String signInUser(RequestSignInUserDTO requestSignInUserDTO);
 
+    /**
+     * Метод для сбора информации пользователю о себе
+     * @param principal сам пользователь
+     * @return дто с именем, ролью и балансом
+     */
+    RequestUserDetailsDTO getUserDetails(Principal principal);
 }

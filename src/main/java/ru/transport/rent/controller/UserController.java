@@ -1,16 +1,18 @@
 package ru.transport.rent.controller;
 
+import java.security.Principal;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
-import ru.transport.rent.dto.user.RequestSingInUserDTO;
+import ru.transport.rent.dto.user.RequestSignInUserDTO;
 import ru.transport.rent.service.user.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 
 /**
@@ -18,7 +20,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/Account")
 public class UserController {
 
     private final UserService userService;
@@ -27,7 +29,7 @@ public class UserController {
     /**
      * Метод для регистрации пользователя.
      */
-    @PostMapping("/registration")
+    @PostMapping("/SignUp")
     public ResponseEntity<?> registrationUser(@RequestBody final RequestRegistrationUserDTO registrationUserDTO) {
         userService.registerUser(registrationUserDTO);
         return ResponseEntity.ok()
@@ -38,10 +40,21 @@ public class UserController {
     /**
      * Метод для получения JWT токена.
      */
-    @PostMapping("/sing-in")
-    public ResponseEntity<?> singInUser(@RequestBody final RequestSingInUserDTO requestSingInUserDTO) {
+    @PostMapping("/SignIn")
+    public ResponseEntity<?> signInUser(@RequestBody final RequestSignInUserDTO requestSignInUserDTO) {
         return ResponseEntity.ok()
-                .body(userService.singInUser(requestSingInUserDTO));
+                .body(userService.signInUser(requestSignInUserDTO));
     }
 
+    @GetMapping("/Me")
+    public ResponseEntity<?> me(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        return ResponseEntity.ok(userService.getUserDetails(principal));
+
+
+    }
+
+    //TODO Me | SignOut | Update |
 }

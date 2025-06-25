@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .findFirst();
 
         if (userAlready.isEmpty()) {
-            throw new UsernameNotFoundException("No find account");
+            throw new UsernameNotFoundException("Didn't find such  account");
         } else {
             return new UserDetailsImpl(userAlready.get());
         }
