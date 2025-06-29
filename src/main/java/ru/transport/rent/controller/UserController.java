@@ -47,7 +47,7 @@ public class UserController {
     }
 
     /**
-     * Метод для возвращения пользователю информации об его аккаунте
+     * Метод для возвращения пользователю информации об его аккаунте.
      */
     @GetMapping("/Me")
     public ResponseEntity<?> me(Principal principal) {

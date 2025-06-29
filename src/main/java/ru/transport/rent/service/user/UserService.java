@@ -23,7 +23,7 @@ public interface UserService {
     String signInUser(RequestSignInUserDTO requestSignInUserDTO);
 
     /**
-     * Метод для сбора информации пользователю о себе
+     * Метод для сбора информации пользователю о себе.
      * @param principal сам пользователь
      * @return дто с именем, ролью и балансом
      */
