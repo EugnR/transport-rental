@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.transport.rent.testservices.DropDbTestService;
 
 import lombok.Getter;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 
 @Testcontainers
@@ -57,6 +58,7 @@ public abstract class AbstractMainTest {
     public void setup() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(ctx)
+                .apply(springSecurity())
                 .build();
     }
 

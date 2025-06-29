@@ -46,10 +46,13 @@ public class UserController {
                 .body(userService.signInUser(requestSignInUserDTO));
     }
 
+    /**
+     * Метод для возвращения пользователю информации об его аккаунте
+     */
     @GetMapping("/Me")
     public ResponseEntity<?> me(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized lol");
         }
         return ResponseEntity.ok(userService.getUserDetails(principal));
 

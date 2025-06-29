@@ -88,6 +88,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     * Метод для возвращения информации об аккаунте
+     */
     @Override
     public RequestUserDetailsDTO getUserDetails(Principal principal) {
         String username = principal.getName();
