@@ -27,9 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * Метод для нахождения пользователя по username.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) {
 
-        Optional<User> userAlready = userRepository.findAll()
+        final Optional<User> userAlready = userRepository.findAll()
                 .stream()
                 .filter(account -> account.getUserName()
                         .equals(username))

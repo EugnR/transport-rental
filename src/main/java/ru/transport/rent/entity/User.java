@@ -1,5 +1,7 @@
 package ru.transport.rent.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -21,7 +23,10 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "users")
-public class User extends AbstractBaseEntity {
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
+public class User extends AbstractBaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "user_name")
     private String userName;

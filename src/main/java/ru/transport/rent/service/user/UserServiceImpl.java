@@ -68,17 +68,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public String signInUser(final RequestSignInUserDTO requestSignInUserDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 requestSignInUserDTO.getUserName(),
                 requestSignInUserDTO.getPassword()
         );
 
-        Authentication authentication;
+        final Authentication authentication;
 
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
-            throw new EntityNotFoundException(e.getMessage());
+            throw new EntityNotFoundException(e.getMessage(), e);
         }
 
         final User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
@@ -92,9 +92,9 @@ public class UserServiceImpl implements UserService {
      * Метод для возвращения информации об аккаунте.
      */
     @Override
-    public RequestUserDetailsDTO getUserDetails(Principal principal) {
-        String username = principal.getName();
-        User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public RequestUserDetailsDTO getUserDetails(final Principal principal) {
+        final String username = principal.getName();
+        final User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return userMapper.mapToUserDetailsDto(user);
     }
 

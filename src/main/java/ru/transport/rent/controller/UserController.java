@@ -50,7 +50,7 @@ public class UserController {
      * Метод для возвращения пользователю информации об его аккаунте.
      */
     @GetMapping("/Me")
-    public ResponseEntity<?> me(Principal principal) {
+    public ResponseEntity<?> me(final Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized lol");
         }

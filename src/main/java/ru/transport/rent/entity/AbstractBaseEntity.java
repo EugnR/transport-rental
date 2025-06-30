@@ -22,6 +22,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @MappedSuperclass
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 public abstract class AbstractBaseEntity {
 
     @Id
@@ -30,14 +31,14 @@ public abstract class AbstractBaseEntity {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass())  {
             return false;
         }
-        AbstractBaseEntity that = (AbstractBaseEntity) o;
+        final AbstractBaseEntity that = (AbstractBaseEntity) o;
         return id == that.id;
     }
 

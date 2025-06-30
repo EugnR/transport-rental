@@ -1,5 +1,7 @@
 package ru.transport.rent.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,7 +21,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractBaseEntity {
+public class Role extends AbstractBaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
 
