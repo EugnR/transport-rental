@@ -39,7 +39,11 @@ public abstract class AbstractBaseEntity {
             return false;
         }
         final AbstractBaseEntity that = (AbstractBaseEntity) o;
-        return id == that.id;
+
+        if (id != null && that.id != null) {
+            return id.equals(that.id);
+        }
+        return false;
     }
 
 
