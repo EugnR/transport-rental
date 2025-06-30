@@ -1,5 +1,6 @@
 package ru.transport.rent.security;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,6 +20,7 @@ import lombok.Getter;
 @Getter
 public class UserDetailsImpl implements UserDetails {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final User user;
