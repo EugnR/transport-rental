@@ -1,26 +1,28 @@
 package ru.transport.rent.service.user;
 
+import java.security.Principal;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
-import ru.transport.rent.dto.user.RequestSingInUserDTO;
+import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUserDetailsDTO;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.mapper.user.UserMapper;
 import ru.transport.rent.repository.RoleRepository;
 import ru.transport.rent.repository.UserRepository;
 import ru.transport.rent.security.JwtService;
 import ru.transport.rent.security.UserDetailsImpl;
-
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerUser(final RequestRegistrationUserDTO requestRegistrationUserDTO) {
-        final User user = userMapper.mapRegistration(requestRegistrationUserDTO);
+        final User user = userMapper.mapFromRegistrationDto(requestRegistrationUserDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleRepository.findById(ROLE_ID_USER)
                 .orElseThrow(EntityNotFoundException::new));
@@ -65,18 +67,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional(readOnly = true)
-    public String singInUser(final RequestSingInUserDTO requestSingInUserDTO) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                requestSingInUserDTO.getUserName(),
-                requestSingInUserDTO.getPassword()
+    public String signInUser(final RequestSignInUserDTO requestSignInUserDTO) {
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                requestSignInUserDTO.getUserName(),
+                requestSignInUserDTO.getPassword()
         );
 
-        Authentication authentication;
+        final Authentication authentication;
 
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
-            throw new EntityNotFoundException(e.getMessage());
+            throw new EntityNotFoundException(e.getMessage(), e);
         }
 
         final User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
@@ -85,5 +87,15 @@ public class UserServiceImpl implements UserService {
                 .getName(), tokenExpiresIn);
     }
 
+
+    /**
+     * Метод для возвращения информации об аккаунте.
+     */
+    @Override
+    public RequestUserDetailsDTO getUserDetails(final Principal principal) {
+        final String username = principal.getName();
+        final User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userMapper.mapToUserDetailsDto(user);
+    }
 
 }

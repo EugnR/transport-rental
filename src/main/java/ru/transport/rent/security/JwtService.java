@@ -32,8 +32,8 @@ public class JwtService {
     /**
      * JwtService.
      */
-    public String generateToken(String username, String role, int expiresIn) {
-        Date expirationDate = Date.from(ZonedDateTime.now()
+    public String generateToken(final String username, final String role, final int expiresIn) {
+        final Date expirationDate = Date.from(ZonedDateTime.now()
                 .plusSeconds(expiresIn)
                 .toInstant());
         return JWT.create()
@@ -49,14 +49,14 @@ public class JwtService {
     /**
      * JwtService.
      */
-    public Optional<String> validateTokenAndRetrieveClaim(String token) {
+    public Optional<String> validateTokenAndRetrieveClaim(final String token) {
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+            final JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                     .withSubject(subject)
                     .withIssuer(issuer)
                     .build();
 
-            DecodedJWT decodedJWT = verifier.verify(token);
+            final DecodedJWT decodedJWT = verifier.verify(token);
 
             return Optional.of(decodedJWT.getClaim("username")
                     .asString());

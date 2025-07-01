@@ -1,5 +1,6 @@
 package ru.transport.rent.security;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,17 +20,20 @@ import lombok.Getter;
 @Getter
 public class UserDetailsImpl implements UserDetails {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final User user;
 
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(final User user) {
         this.user = user;
     }
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = user.getRole()
+        final String role = user.getRole()
                 .getName();
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }

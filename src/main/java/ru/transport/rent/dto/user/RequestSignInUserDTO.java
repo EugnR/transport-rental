@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class RequestSingInUserDTO {
+public class RequestSignInUserDTO {
 
     private String userName;
     private String password;
