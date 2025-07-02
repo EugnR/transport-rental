@@ -29,12 +29,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(final HttpServletRequest request,
+            final HttpServletResponse response,
+            final FilterChain filterChain) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-        Optional<String> username = extractUsername(authHeader);
+        final String authHeader = request.getHeader("Authorization");
+        final Optional<String> username = extractUsername(authHeader);
         if (username.isPresent()) {
             try {
                 setAuthenticatedAs(username.get());
@@ -47,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
 
-    private Optional<String> extractUsername(String header) {
+    private Optional<String> extractUsername(final String header) {
         if (header == null || header.isBlank()) {
             return Optional.empty();
         }
@@ -58,10 +58,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
 
-    private void setAuthenticatedAs(String username) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    private void setAuthenticatedAs(final String username) {
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, userDetails.getPassword(),
                 userDetails.getAuthorities()
         );

@@ -27,16 +27,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * Метод для нахождения пользователя по username.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) {
 
-        Optional<User> userAlready = userRepository.findAll()
+        final Optional<User> userAlready = userRepository.findAll()
                 .stream()
                 .filter(account -> account.getUserName()
                         .equals(username))
                 .findFirst();
 
         if (userAlready.isEmpty()) {
-            throw new UsernameNotFoundException("No find account");
+            throw new UsernameNotFoundException("Didn't find such  account");
         } else {
             return new UserDetailsImpl(userAlready.get());
         }
