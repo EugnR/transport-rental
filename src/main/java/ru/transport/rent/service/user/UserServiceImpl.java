@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
 import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUpdateUserDTO;
 import ru.transport.rent.dto.user.RequestUserDetailsDTO;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.mapper.user.UserMapper;
@@ -68,7 +69,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public String signInUser(final RequestSignInUserDTO requestSignInUserDTO) {
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        final UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
                 requestSignInUserDTO.getUserName(),
                 requestSignInUserDTO.getPassword()
         );
@@ -96,6 +98,28 @@ public class UserServiceImpl implements UserService {
         final String username = principal.getName();
         final User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return userMapper.mapToUserDetailsDto(user);
+    }
+
+    /**
+     * Метод для обновления информации об аккаунте.
+     *
+     * @param requestUpdateUserDTO строки новых логина и пароля
+     * @param principal сам пользователь
+     */
+    @Override
+    public String updateUserDetails(RequestUpdateUserDTO requestUpdateUserDTO, Principal principal) {
+        String username = principal.getName();
+
+        User currentUser = userRepository.findByUserName(username).orElseThrow(() ->
+                new UsernameNotFoundException("User to change not found"));
+        User newUserData = userMapper.mapFromUpdateUserDTO(requestUpdateUserDTO);
+
+        currentUser.setUserName(newUserData.getUserName());
+        currentUser.setPassword(passwordEncoder.encode(newUserData.getPassword()));
+        userRepository.save(currentUser);
+
+        return jwtService.generateToken(currentUser.getUserName(), currentUser.getRole()
+                .getName(), tokenExpiresIn);
     }
 
 }
