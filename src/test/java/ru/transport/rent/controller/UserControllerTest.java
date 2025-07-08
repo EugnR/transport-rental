@@ -128,7 +128,7 @@ public class UserControllerTest extends AbstractMainTest {
         String jwt = authResult.getResponse().getContentAsString();
 
         User userBefore = userRepository.findByUserName(
-                CommonUtils.getFieldFromJson(registrationJson, "userName")
+                CommonUtils.getFieldFromJson(registrationJson, "username")
                 )
                 .orElseThrow(() -> new RuntimeException("User not found after registration"));
         String oldUsername = userBefore.getUserName();
@@ -146,7 +146,7 @@ public class UserControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         User userAfter = userRepository.findByUserName(
-                CommonUtils.getFieldFromJson(logAndPassJson, "userName")
+                CommonUtils.getFieldFromJson(logAndPassJson, "username")
                 )
                 .orElseThrow(() -> new RuntimeException("User not found after update"));
         String newUsername = userAfter.getUserName();
