@@ -13,18 +13,18 @@ import ru.transport.rent.entity.User;
 public interface UserMapper {
 
     /**
-     * Метод для сопоставления полей из RequestRegistrationUserDTO в User
+     * Метод для сопоставления полей из RequestRegistrationUserDTO в User.
      */
-    User mapFromRegistrationDto(RequestRegistrationUserDTO userDTO);
+    User mapRegistrationDtoToUser(RequestRegistrationUserDTO userDTO);
 
     /**
-     * Метод для сопоставления полей из User в RequestUserDetailsDTO
+     * Метод для сопоставления полей из User в RequestUserDetailsDTO.
      */
     @Mapping(source = "role.name", target = "roleName")
-    RequestUserDetailsDTO mapToUserDetailsDto(User user);
+    RequestUserDetailsDTO mapUserToUserDetailsDto(User user);
 
     /**
-     * Метод для сопоставления полей из RequestUpdateUserDTO в User
+     * Метод для сопоставления полей из RequestUpdateUserDTO в User.
      */
-    User mapFromUpdateUserDTO(RequestUpdateUserDTO userDTO);
+    User mapUpdateUserDtoToUser(RequestUpdateUserDTO userDTO);
 }

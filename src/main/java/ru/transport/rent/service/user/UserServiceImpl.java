@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerUser(final RequestRegistrationUserDTO requestRegistrationUserDTO) {
-        final User user = userMapper.mapFromRegistrationDto(requestRegistrationUserDTO);
+        final User user = userMapper.mapRegistrationDtoToUser(requestRegistrationUserDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleRepository.findById(ROLE_ID_USER)
                 .orElseThrow(EntityNotFoundException::new));
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public RequestUserDetailsDTO getUserDetails(final Principal principal) {
         final String username = principal.getName();
         final User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return userMapper.mapToUserDetailsDto(user);
+        return userMapper.mapUserToUserDetailsDto(user);
     }
 
     /**
@@ -107,12 +107,12 @@ public class UserServiceImpl implements UserService {
      * @param principal сам пользователь
      */
     @Override
-    public String updateUserDetails(RequestUpdateUserDTO requestUpdateUserDTO, Principal principal) {
-        String username = principal.getName();
+    public String updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO, final Principal principal) {
+        final String username = principal.getName();
 
-        User currentUser = userRepository.findByUserName(username).orElseThrow(() ->
+        final User currentUser = userRepository.findByUserName(username).orElseThrow(() ->
                 new UsernameNotFoundException("User to change not found"));
-        User newUserData = userMapper.mapFromUpdateUserDTO(requestUpdateUserDTO);
+        final User newUserData = userMapper.mapUpdateUserDtoToUser(requestUpdateUserDTO);
 
         currentUser.setUserName(newUserData.getUserName());
         currentUser.setPassword(passwordEncoder.encode(newUserData.getPassword()));

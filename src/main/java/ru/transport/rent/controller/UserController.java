@@ -63,7 +63,7 @@ public class UserController {
      * Метод для обновления аккаунта.
      */
     @PutMapping("/Update")
-    public ResponseEntity<?> updateAccount(@RequestBody final RequestUpdateUserDTO updateUserDTO, Principal principal) {
+    public ResponseEntity<?> updateAccount(@RequestBody final RequestUpdateUserDTO updateUserDTO, final Principal principal) {
         return ResponseEntity.ok()
                 .body(userService.updateUserDetails(updateUserDTO, principal));
     }
