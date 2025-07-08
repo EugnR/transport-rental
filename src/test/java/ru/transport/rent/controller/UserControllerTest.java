@@ -25,7 +25,8 @@ public class UserControllerTest extends AbstractMainTest {
     @Test
     @DisplayName("registration user")
     public void testShouldRegistrationUser() throws Exception {
-        final String jsonFromResource = CommonUtils.getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        final String jsonFromResource = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
 
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/Account/SignUp")
@@ -41,11 +42,11 @@ public class UserControllerTest extends AbstractMainTest {
         Assertions.assertEquals(1, all.size());
     }
 
-
     @Test
     @DisplayName("sign in user")
     public void testShouldGiveJwtTokenUser() throws Exception {
-        final String registrationJson = CommonUtils.getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        final String registrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/Account/SignUp")
@@ -56,7 +57,8 @@ public class UserControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
-        final String authJson = CommonUtils.getJsonFromResource("user-controller/RequestSignInUser.json");
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/Account/SignIn")
@@ -71,7 +73,8 @@ public class UserControllerTest extends AbstractMainTest {
     @Test
     @DisplayName("get account details")
     public void testShouldReturnUserDetails() throws Exception {
-        String registrationJson = CommonUtils.getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        String registrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/Account/SignUp")
@@ -80,7 +83,8 @@ public class UserControllerTest extends AbstractMainTest {
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        String signInJson = CommonUtils.getJsonFromResource("user-controller/RequestSignInUser.json");
+        String signInJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
 
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/Account/SignIn")
@@ -90,16 +94,66 @@ public class UserControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        // 3. Извлечь токен из ответа
-        String jwt = result.getResponse().getContentAsString(); // предполагаем, что токен возвращается как строка
+        String jwt = result.getResponse().getContentAsString();
 
-        // 4. Сделать GET-запрос к /Me с заголовком Authorization
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/Account/Me")
                                 .header("Authorization", "Bearer " + jwt)
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("username")); // подставь правильное имя из JSON
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userName").value("username"));
+    }
+
+    @Test
+    @DisplayName("change account login and password")
+    public void testShouldChangeAccountLoginAndPassword() throws Exception {
+        final String registrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registrationJson)
+        );
+
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignIn")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authJson)
+                )
+                .andReturn();
+
+        String jwt = authResult.getResponse().getContentAsString();
+
+        User userBefore = userRepository.findByUserName(
+                CommonUtils.getFieldFromJson(registrationJson, "userName")
+                )
+                .orElseThrow(() -> new RuntimeException("User not found after registration"));
+        String oldUsername = userBefore.getUserName();
+        String oldPasswordHash = userBefore.getPassword();
+
+        final String logAndPassJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestChangeLoginAndPassword.json");
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/Account/Update")
+                        .header("Authorization", "Bearer " + jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(logAndPassJson)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        User userAfter = userRepository.findByUserName(
+                CommonUtils.getFieldFromJson(logAndPassJson, "userName")
+                )
+                .orElseThrow(() -> new RuntimeException("User not found after update"));
+        String newUsername = userAfter.getUserName();
+        String newPasswordHash = userAfter.getPassword();
+
+        Assertions.assertNotEquals(oldUsername, newUsername);
+        Assertions.assertNotEquals(oldPasswordHash, newPasswordHash);
+
     }
 }
