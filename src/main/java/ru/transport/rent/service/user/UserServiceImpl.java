@@ -108,17 +108,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         final User currentUser = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() ->
                 new UsernameNotFoundException("User to change not found"));
-        final User newUserData = userMapper.mapUpdateUserDtoToUser(requestUpdateUserDTO);
-
-        currentUser.setUserName(newUserData.getUserName());
-        currentUser.setPassword(passwordEncoder.encode(newUserData.getPassword()));
+        userMapper.mapUpdateUserDtoToUser(requestUpdateUserDTO, currentUser, passwordEncoder);
         userRepository.save(currentUser);
-
     }
 
 }
