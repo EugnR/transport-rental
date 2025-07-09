@@ -64,8 +64,8 @@ public class UserController {
      */
     @PutMapping("/Update")
     public ResponseEntity<?> updateAccount(@RequestBody final RequestUpdateUserDTO updateUserDTO, final Principal principal) {
-        return ResponseEntity.ok()
-                .body(userService.updateUserDetails(updateUserDTO, principal));
+        userService.updateUserDetails(updateUserDTO, principal);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
      * @param principal сам пользователь
      */
     @Override
-    public String updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO, final Principal principal) {
+    public void updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO, final Principal principal) {
         final String username = principal.getName();
 
         final User currentUser = userRepository.findByUserName(username).orElseThrow(() ->
@@ -118,8 +118,6 @@ public class UserServiceImpl implements UserService {
         currentUser.setPassword(passwordEncoder.encode(newUserData.getPassword()));
         userRepository.save(currentUser);
 
-        return jwtService.generateToken(currentUser.getUserName(), currentUser.getRole()
-                .getName(), tokenExpiresIn);
     }
 
 }
