@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 /**
  * JwtService.
  */
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 @Component
 public class JwtService {
 

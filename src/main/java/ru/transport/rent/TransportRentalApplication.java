@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 @EnableConfigurationProperties
 @EntityScan("ru.transport.rent")
 @EnableAsync
+@SuppressWarnings("PMD.UseUtilityClass")
 public class TransportRentalApplication {
     /**
      * Program entry point.
