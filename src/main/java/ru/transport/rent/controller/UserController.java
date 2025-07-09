@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
 import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUpdateUserDTO;
 import ru.transport.rent.service.user.UserService;
 
 
@@ -55,9 +57,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized lol");
         }
         return ResponseEntity.ok(userService.getUserDetails(principal));
-
-
     }
 
+    /**
+     * Метод для обновления аккаунта.
+     */
+    @PutMapping("/Update")
+    public ResponseEntity<?> updateAccount(@RequestBody final RequestUpdateUserDTO updateUserDTO) {
+        userService.updateUserDetails(updateUserDTO);
+        return ResponseEntity.ok().build();
+    }
 
 }

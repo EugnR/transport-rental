@@ -39,6 +39,7 @@ public class SecurityConfiguration {
     /**
      * SecurityConfiguration.
      */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         return http
@@ -63,6 +64,7 @@ public class SecurityConfiguration {
     /**
      * SecurityConfiguration.
      */
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Bean
     public AuthenticationManager authenticationManager(final HttpSecurity httpSecurity) throws Exception {
         final AuthenticationManagerBuilder builder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);

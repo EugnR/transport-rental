@@ -6,12 +6,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.concurrent.ThreadLocalRandom;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.FileCopyUtils;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public class CommonUtils {
@@ -21,6 +23,7 @@ public class CommonUtils {
     public static final Integer TEN = 10;
     public static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Integer getRandomNumber() {
         return ThreadLocalRandom.current()
@@ -73,6 +76,17 @@ public class CommonUtils {
             return FileCopyUtils.copyToByteArray(inputStream);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    public static String getFieldFromJson(String json, String fieldName) {
+        try {
+            JsonNode root = objectMapper.readTree(json);
+            JsonNode node = root.path(fieldName);
+            return node.isMissingNode() ? null : node.asText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -38,8 +39,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username.isPresent()) {
             try {
                 setAuthenticatedAs(username.get());
-            } catch (Exception e) {
-                logger.error(e.getMessage());
+            } catch (UsernameNotFoundException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage());
+                }
             }
         }
 

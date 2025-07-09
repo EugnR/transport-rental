@@ -10,12 +10,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
 import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUpdateUserDTO;
 import ru.transport.rent.dto.user.RequestUserDetailsDTO;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.mapper.user.UserMapper;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerUser(final RequestRegistrationUserDTO requestRegistrationUserDTO) {
-        final User user = userMapper.mapFromRegistrationDto(requestRegistrationUserDTO);
+        final User user = userMapper.mapRegistrationDtoToUser(requestRegistrationUserDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(roleRepository.findById(ROLE_ID_USER)
                 .orElseThrow(EntityNotFoundException::new));
@@ -68,7 +70,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public String signInUser(final RequestSignInUserDTO requestSignInUserDTO) {
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+        final UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(
                 requestSignInUserDTO.getUserName(),
                 requestSignInUserDTO.getPassword()
         );
@@ -95,7 +98,23 @@ public class UserServiceImpl implements UserService {
     public RequestUserDetailsDTO getUserDetails(final Principal principal) {
         final String username = principal.getName();
         final User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return userMapper.mapToUserDetailsDto(user);
+        return userMapper.mapUserToUserDetailsDto(user);
+    }
+
+    /**
+     * Метод для обновления информации об аккаунте.
+     *
+     * @param requestUpdateUserDTO строки новых логина и пароля
+     */
+    @Override
+    public void updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        final User currentUser = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() ->
+                new UsernameNotFoundException("User to change not found"));
+        userMapper.mapUpdateUserDtoToUser(requestUpdateUserDTO, currentUser, passwordEncoder);
+        userRepository.save(currentUser);
     }
 
 }
