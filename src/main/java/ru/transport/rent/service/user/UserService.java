@@ -33,5 +33,5 @@ public interface UserService {
     /**
      * Метод для обновления информации об аккаунте.
      */
-    void updateUserDetails(RequestUpdateUserDTO requestUpdateUserDTO, Principal principal);
+    void updateUserDetails(RequestUpdateUserDTO requestUpdateUserDTO);
 }

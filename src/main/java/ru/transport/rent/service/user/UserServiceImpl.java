@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -104,13 +105,13 @@ public class UserServiceImpl implements UserService {
      * Метод для обновления информации об аккаунте.
      *
      * @param requestUpdateUserDTO строки новых логина и пароля
-     * @param principal сам пользователь
      */
     @Override
-    public void updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO, final Principal principal) {
-        final String username = principal.getName();
+    public void updateUserDetails(final RequestUpdateUserDTO requestUpdateUserDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        final User currentUser = userRepository.findByUserName(username).orElseThrow(() ->
+        final User currentUser = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() ->
                 new UsernameNotFoundException("User to change not found"));
         final User newUserData = userMapper.mapUpdateUserDtoToUser(requestUpdateUserDTO);
 
