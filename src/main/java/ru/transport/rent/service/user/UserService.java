@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import ru.transport.rent.dto.user.RequestRegistrationUserDTO;
 import ru.transport.rent.dto.user.RequestSignInUserDTO;
+import ru.transport.rent.dto.user.RequestUpdateUserDTO;
 import ru.transport.rent.dto.user.RequestUserDetailsDTO;
 
 
@@ -28,4 +29,9 @@ public interface UserService {
      * @return дто с именем, ролью и балансом
      */
     RequestUserDetailsDTO getUserDetails(Principal principal);
+
+    /**
+     * Метод для обновления информации об аккаунте.
+     */
+    void updateUserDetails(RequestUpdateUserDTO requestUpdateUserDTO);
 }

@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-
 /**
- * ДТО для регистрации.
+ * ДТО для обновления информации об аккаунте.
  */
 @Data
 @Builder
-public class RequestRegistrationUserDTO {
+public class RequestUpdateUserDTO {
 
     @JsonProperty("username")
     private String userName;
