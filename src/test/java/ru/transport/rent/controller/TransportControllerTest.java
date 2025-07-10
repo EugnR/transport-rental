@@ -59,4 +59,43 @@ class TransportControllerTest extends AbstractMainTest {
         final List<Transport> all = transportRepository.findAll();
         Assertions.assertEquals(1, all.size());
     }
+
+    @Test
+    @DisplayName("registration transport with invalid type should return BadRequest")
+    void testShouldFailOnInvalidTransportType() throws Exception {
+        final String registrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registrationJson)
+        );
+
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        String jwt = authResult.getResponse().getContentAsString();
+
+        final String invalidTransportJson = CommonUtils
+                .getJsonFromResource("transport-controller/RequestRegisterTransportWithInvalidType.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Transport")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(invalidTransportJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        final List<Transport> all = transportRepository.findAll();
+        Assertions.assertTrue(all.isEmpty(), "Transport should not be saved with invalid type");
+    }
+
 }

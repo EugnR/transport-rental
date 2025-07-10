@@ -1,0 +1,12 @@
+{
+  "canBeRented": false,
+  "transportType": "Tank",
+  "model": "T-72",
+  "color": "Green",
+  "identifier": "0001ta",
+  "description": "Good old tank",
+  "latitude": 53.225775091771084,
+  "longitude": 50.19476734475567,
+  "minutePrice": 15.0,
+  "dayPrice": 3500.0
+}
