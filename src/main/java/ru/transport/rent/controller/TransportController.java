@@ -26,7 +26,7 @@ public class TransportController {
      * Метод для регистрации нового транспорта.
      */
     @PostMapping
-    public ResponseEntity<?> registerTransport(@RequestBody RequestRegisterTransportDTO registerTransportDTO) {
+    public ResponseEntity<?> registerTransport(@RequestBody final RequestRegisterTransportDTO registerTransportDTO) {
         try {
             transportServiceImpl.registerTransport(registerTransportDTO);
             return ResponseEntity.ok().build();

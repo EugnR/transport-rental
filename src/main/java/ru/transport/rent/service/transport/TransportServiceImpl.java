@@ -26,18 +26,18 @@ import ru.transport.rent.security.UserDetailsImpl;
 @Slf4j
 public class TransportServiceImpl implements TransportService {
 
+    private static final Set<String> VALID_TRANSPORT_TYPES = Set.of("Car", "Bike", "Scooter");
+
     private final TransportRepository transportRepository;
     private final UserRepository userRepository;
     private final TransportMapper transportMapper;
-
-    private static final Set<String> VALID_TRANSPORT_TYPES = Set.of("Car", "Bike", "Scooter");
 
     /**
      * Метод для регистрации нового транспорта.
      */
     @Override
     @Transactional
-    public void registerTransport(RequestRegisterTransportDTO registerTransportDTO) throws UsernameNotFoundException, InvalidTransportTypeException {
+    public void registerTransport(final RequestRegisterTransportDTO registerTransportDTO) {
 
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -45,11 +45,11 @@ public class TransportServiceImpl implements TransportService {
                 new UsernameNotFoundException("User that meant to be an owner of a new car is not found"));
         final String transportType = registerTransportDTO.getTransportType();
 
-        if (!VALID_TRANSPORT_TYPES.contains(transportType)){
+        if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
             throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
         }
 
-        Transport newTransport = transportMapper.mapRegisterTransportDtoToTransport(registerTransportDTO);
+        final Transport newTransport = transportMapper.mapRegisterTransportDtoToTransport(registerTransportDTO);
         newTransport.setOwner(owner);
 
         transportRepository.save(newTransport);

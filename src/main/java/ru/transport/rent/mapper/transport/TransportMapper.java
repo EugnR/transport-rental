@@ -9,7 +9,7 @@ import ru.transport.rent.entity.Transport;
 public interface TransportMapper {
 
     /**
-     * Метод для сопоставления полей из RequestRegisterTransportDTO в Transport
+     * Метод для сопоставления полей из RequestRegisterTransportDTO в Transport.
      */
     Transport mapRegisterTransportDtoToTransport(RequestRegisterTransportDTO registerTransportDTO);
 }

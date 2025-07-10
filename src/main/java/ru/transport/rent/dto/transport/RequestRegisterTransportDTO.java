@@ -1,27 +1,24 @@
 package ru.transport.rent.dto.transport;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Дто приходящий для регистрации нового транспорта.
  */
 @Data
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RequestRegisterTransportDTO {
 
-    Boolean canBeRented;
-    String transportType;
-    String model;
-    String color;
-    String identifier;
-    String description;
-    Double latitude;
-    Double longitude;
-    Double minutePrice;
-    Double dayPrice;
+    private Boolean canBeRented;
+    private String transportType;
+    private String model;
+    private String color;
+    private String identifier;
+    private String description;
+    private Double latitude;
+    private Double longitude;
+    private Double minutePrice;
+    private Double dayPrice;
 
 }
