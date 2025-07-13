@@ -1,0 +1,42 @@
+package ru.transport.rent.exceptions;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/**
+ * Обработчик исключений для контроллеров.
+ */
+@Slf4j
+@RestControllerAdvice
+@SuppressWarnings("PMD.AtLeastOneConstructor")
+public class CustomExceptionHandler {
+
+    /**
+     * Обработчик InvalidTransportTypeException.
+     */
+    @ExceptionHandler(InvalidTransportTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidTransportTypeException(final InvalidTransportTypeException ex) {
+        if (log.isErrorEnabled()) {
+            log.error(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Обработчик UsernameNotFoundException.
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> handleUsernameNotFoundException(final UsernameNotFoundException ex) {
+        if (log.isErrorEnabled()) {
+            log.error(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+}
