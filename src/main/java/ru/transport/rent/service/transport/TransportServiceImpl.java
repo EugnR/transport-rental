@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
+import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
@@ -28,6 +30,7 @@ public class TransportServiceImpl implements TransportService {
 
     private final TransportRepository transportRepository;
     private final TransportMapper transportMapper;
+
 
     /**
      * Метод для регистрации нового транспорта.
@@ -49,5 +52,12 @@ public class TransportServiceImpl implements TransportService {
         newTransport.setOwner(owner);
 
         transportRepository.save(newTransport);
+    }
+
+    @Override
+    public RequestTransportDetailsDTO getTransportDetails(final Long id) {
+        return transportMapper.mapTransportToRequestTransportDetails(
+                transportRepository.findById(id)
+                        .orElseThrow(() -> new UsernameNotFoundException("Transport not found")));
     }
 }

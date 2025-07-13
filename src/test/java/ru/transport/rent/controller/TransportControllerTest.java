@@ -2,6 +2,7 @@ package ru.transport.rent.controller;
 
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -98,4 +99,64 @@ class TransportControllerTest extends AbstractMainTest {
         Assertions.assertTrue(all.isEmpty(), "Transport should not be saved with invalid type");
     }
 
+    @Test
+    @DisplayName("get transport details by id")
+    public void testShouldReturnTransportDetailsById() throws Exception {
+        final String registrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registrationJson)
+        );
+
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        String jwt = authResult.getResponse().getContentAsString();
+
+        final String jsonFromResource = CommonUtils
+                .getJsonFromResource("transport-controller/RequestRegisterTransport.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Transport")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonFromResource)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+
+
+
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/Transport/1")
+                                .header("Authorization", "Bearer " + jwt))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ownerId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ownerUsername").value("username"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transportType").value("Car"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.model").value("Toyota"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.color").value("White"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.identifier").value("om777j"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("A white toyota with license plate number om777j"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.latitude").value(Matchers.closeTo(53.225775091771084, 0.0000001)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.longitude").value(Matchers.closeTo(50.19476734475567, 0.0000001)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.minutePrice").value(15.0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dayPrice").value(3500.0));
+
+
+
+
+    }
 }
