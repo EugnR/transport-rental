@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
@@ -15,7 +14,6 @@ import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.TransportRepository;
-import ru.transport.rent.repository.UserRepository;
 import ru.transport.rent.security.UserDetailsImpl;
 
 /**
@@ -29,7 +27,6 @@ public class TransportServiceImpl implements TransportService {
     private static final Set<String> VALID_TRANSPORT_TYPES = Set.of("Car", "Bike", "Scooter");
 
     private final TransportRepository transportRepository;
-    private final UserRepository userRepository;
     private final TransportMapper transportMapper;
 
     /**
@@ -41,8 +38,7 @@ public class TransportServiceImpl implements TransportService {
 
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        final User owner = userRepository.findByUserName(userDetails.getUsername()).orElseThrow(() ->
-                new UsernameNotFoundException("User that meant to be an owner of a new car is not found"));
+        final User owner = userDetails.getUser();
         final String transportType = registerTransportDTO.getTransportType();
 
         if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
