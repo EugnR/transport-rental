@@ -208,7 +208,7 @@ class TransportControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
-        Transport transportAfter = transportRepository.findById(1L).orElseThrow(() -> new NoSuchElementException());
+        Transport transportAfter = transportRepository.findById(1L).orElseThrow(NoSuchElementException::new);
 
         assertThat(transportAfter.getCanBeRented()).isFalse();
         assertThat(transportAfter.getModel()).isEqualTo("Nissan");
