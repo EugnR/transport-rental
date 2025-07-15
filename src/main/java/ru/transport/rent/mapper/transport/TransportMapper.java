@@ -25,7 +25,7 @@ public interface TransportMapper {
     RequestTransportDetailsDTO mapTransportToTransportDetailsDto(Transport transport);
 
     /**
-     * Метод для сопоставления полей из RequestUpdateTransportDTO в Transport
+     * Метод для сопоставления полей из RequestUpdateTransportDTO в Transport.
      */
-    Transport mapUpdateTransportDtoToTransport(RequestUpdateTransportDTO updateTransportDTO, @MappingTarget Transport transport);
+    void mapUpdateTransportDtoToTransport(RequestUpdateTransportDTO updateTransportDTO, @MappingTarget Transport transport);
 }

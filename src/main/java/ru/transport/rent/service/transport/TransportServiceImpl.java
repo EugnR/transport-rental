@@ -67,9 +67,10 @@ public class TransportServiceImpl implements TransportService {
      * Метод для смены информации о транспорте по id.
      */
     @Override
-    public void updateTransportDetails(Long id, RequestUpdateTransportDTO UpdateTransportDTO) {
-        Transport currentTransport = transportRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Transport to update is not found"));
-        transportMapper.mapUpdateTransportDtoToTransport(UpdateTransportDTO, currentTransport);
+    public void updateTransportDetails(final Long id, final RequestUpdateTransportDTO updateTransportDTO) {
+        final Transport currentTransport = transportRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Transport to update is not found"));
+        transportMapper.mapUpdateTransportDtoToTransport(updateTransportDTO, currentTransport);
         transportRepository.save(currentTransport);
     }
 }

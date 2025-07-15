@@ -1,6 +1,7 @@
 package ru.transport.rent.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -197,8 +198,6 @@ class TransportControllerTest extends AbstractMainTest {
         final String newTransportDetailsJson = CommonUtils
                 .getJsonFromResource("transport-controller/RequestChangeTransport.json");
 
-        Transport transportBefore = transportRepository.findById(1L).get();
-
         mockMvc.perform(
                         MockMvcRequestBuilders.put("/api/Transport/1")
                                 .header("Authorization", "Bearer " + jwt)
@@ -209,7 +208,7 @@ class TransportControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.status()
                         .isOk());
 
-        Transport transportAfter = transportRepository.findById(1L).get();
+        Transport transportAfter = transportRepository.findById(1L).orElseThrow(() -> new NoSuchElementException());
 
         assertThat(transportAfter.getCanBeRented()).isFalse();
         assertThat(transportAfter.getModel()).isEqualTo("Nissan");

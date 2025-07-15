@@ -22,5 +22,5 @@ public interface TransportService {
     /**
      * Метод для смены информации о транспорте по id.
      */
-    void updateTransportDetails(Long id, RequestUpdateTransportDTO UpdateTransportDTO);
+    void updateTransportDetails(Long id, RequestUpdateTransportDTO updateTransportDTO);
 }
