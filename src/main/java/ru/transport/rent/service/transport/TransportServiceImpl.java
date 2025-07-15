@@ -68,16 +68,8 @@ public class TransportServiceImpl implements TransportService {
      */
     @Override
     public void updateTransportDetails(Long id, RequestUpdateTransportDTO UpdateTransportDTO) {
-        final String transportType = UpdateTransportDTO.getTransportType();
-
-        if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
-            throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
-        }
-
         Transport currentTransport = transportRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Transport to update is not found"));
         transportMapper.mapUpdateTransportDtoToTransport(UpdateTransportDTO, currentTransport);
         transportRepository.save(currentTransport);
-
-
     }
 }

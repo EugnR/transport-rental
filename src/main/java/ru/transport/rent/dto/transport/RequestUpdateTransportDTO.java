@@ -11,7 +11,6 @@ import lombok.Data;
 public class RequestUpdateTransportDTO {
 
     private Boolean canBeRented;
-    private String transportType;
     private String model;
     private String color;
     private String identifier;
