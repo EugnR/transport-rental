@@ -1,5 +1,7 @@
 package ru.transport.rent.exceptions;
 
+import java.util.NoSuchElementException;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     /**
-     * Обработчик InvalidTransportTypeException.
+     * Обработчик NoSuchElementException, для случаев когда объект в репозитории найден не был.
+     */
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNoSuchElementException(final NoSuchElementException ex) {
+        if (log.isErrorEnabled()) {
+            log.error(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Обработчик InvalidTransportTypeException, если пришёл json с неправильным типом транспорта.
      */
     @ExceptionHandler(InvalidTransportTypeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -1,5 +1,6 @@
 package ru.transport.rent.service.transport;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
+import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
@@ -56,8 +58,26 @@ public class TransportServiceImpl implements TransportService {
 
     @Override
     public RequestTransportDetailsDTO getTransportDetails(final Long id) {
-        return transportMapper.mapTransportToRequestTransportDetails(
+        return transportMapper.mapTransportToTransportDetailsDto(
                 transportRepository.findById(id)
                         .orElseThrow(() -> new UsernameNotFoundException("Transport not found")));
+    }
+
+    /**
+     * Метод для смены информации о транспорте по id.
+     */
+    @Override
+    public void updateTransportDetails(Long id, RequestUpdateTransportDTO UpdateTransportDTO) {
+        final String transportType = UpdateTransportDTO.getTransportType();
+
+        if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
+            throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
+        }
+
+        Transport currentTransport = transportRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Transport to update is not found"));
+        transportMapper.mapUpdateTransportDtoToTransport(UpdateTransportDTO, currentTransport);
+        transportRepository.save(currentTransport);
+
+
     }
 }
