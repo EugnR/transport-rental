@@ -2,6 +2,7 @@ package ru.transport.rent.service.transport;
 
 import java.util.Set;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
+import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
@@ -56,8 +58,19 @@ public class TransportServiceImpl implements TransportService {
 
     @Override
     public RequestTransportDetailsDTO getTransportDetails(final Long id) {
-        return transportMapper.mapTransportToRequestTransportDetails(
+        return transportMapper.mapTransportToTransportDetailsDto(
                 transportRepository.findById(id)
                         .orElseThrow(() -> new UsernameNotFoundException("Transport not found")));
+    }
+
+    /**
+     * Метод для смены информации о транспорте по id.
+     */
+    @Override
+    public void updateTransportDetails(final Long id, final RequestUpdateTransportDTO updateTransportDTO) {
+        final Transport currentTransport = transportRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transport to update is not found"));
+        transportMapper.mapUpdateTransportDtoToTransport(updateTransportDTO, currentTransport);
+        transportRepository.save(currentTransport);
     }
 }

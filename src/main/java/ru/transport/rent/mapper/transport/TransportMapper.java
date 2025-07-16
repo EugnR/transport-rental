@@ -3,8 +3,10 @@ package ru.transport.rent.mapper.transport;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
+import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
 import ru.transport.rent.entity.Transport;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
@@ -20,5 +22,10 @@ public interface TransportMapper {
      */
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "owner.userName", target = "ownerUsername")
-    RequestTransportDetailsDTO mapTransportToRequestTransportDetails(Transport transport);
+    RequestTransportDetailsDTO mapTransportToTransportDetailsDto(Transport transport);
+
+    /**
+     * Метод для сопоставления полей из RequestUpdateTransportDTO в Transport.
+     */
+    void mapUpdateTransportDtoToTransport(RequestUpdateTransportDTO updateTransportDTO, @MappingTarget Transport transport);
 }

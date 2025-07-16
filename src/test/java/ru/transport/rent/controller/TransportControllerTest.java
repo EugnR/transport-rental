@@ -1,6 +1,7 @@
 package ru.transport.rent.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +17,7 @@ import ru.transport.rent.AbstractMainTest;
 import ru.transport.rent.CommonUtils;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.repository.TransportRepository;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TransportControllerTest extends AbstractMainTest {
 
@@ -154,9 +156,69 @@ class TransportControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.longitude").value(Matchers.closeTo(50.19476734475567, 0.0000001)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.minutePrice").value(15.0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dayPrice").value(3500.0));
+    }
 
+    @Test
+    @DisplayName("change transport by id")
+    public void testShouldChangeTransportById() throws Exception {
+//region register, sign in, get jwt and register transport
+        final String userRegistrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegistrationJson)
+        );
 
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
 
+        String jwt = authResult.getResponse().getContentAsString();
+
+        final String transportRegistrationJson = CommonUtils
+                .getJsonFromResource("transport-controller/RequestRegisterTransport.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Transport")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(transportRegistrationJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+//endregion
+
+        final String newTransportDetailsJson = CommonUtils
+                .getJsonFromResource("transport-controller/RequestChangeTransport.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/api/Transport/1")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(newTransportDetailsJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+
+        Transport transportAfter = transportRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+
+        assertThat(transportAfter.getCanBeRented()).isFalse();
+        assertThat(transportAfter.getModel()).isEqualTo("Nissan");
+        assertThat(transportAfter.getColor()).isEqualTo("Black");
+        assertThat(transportAfter.getIdentifier()).isEqualTo("om555j");
+        assertThat(transportAfter.getDescription()).isEqualTo("Black nissan that was toyota");
+        assertThat(transportAfter.getLatitude()).isEqualTo(55.753352512463);
+        assertThat(transportAfter.getLongitude()).isEqualTo(37.582597690419);
+        assertThat(transportAfter.getMinutePrice()).isEqualTo(16.0);
+        assertThat(transportAfter.getDayPrice()).isEqualTo(4000.0);
 
     }
 }
