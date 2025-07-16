@@ -10,5 +10,7 @@
 <include file="liquibase/scripts/0002-insert-data-for-table-role.xml"/>
 <include file="liquibase/scripts/0003-alter-table-users.xml"/>
 <include file="liquibase/scripts/0004-delete-role-in-table-role.xml"/>
+<include file="liquibase/scripts/0005-change-ligtitude-and-latitude-fields.xml"/>
+<include file="liquibase/scripts/0006-change-longtitude-and-latitude-fields.xml"/>
 
 </databaseChangeLog>

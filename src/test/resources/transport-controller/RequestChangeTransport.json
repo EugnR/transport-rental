@@ -1,0 +1,11 @@
+{
+  "canBeRented": false,
+  "model": "Nissan",
+  "color": "Black",
+  "identifier": "om555j",
+  "description": "Black nissan that was toyota",
+  "latitude": 55.753352512463,
+  "longitude": 37.582597690419,
+  "minutePrice": 16.0,
+  "dayPrice": 4000.0
+}

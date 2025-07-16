@@ -1,0 +1,20 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="update-transport-latitude-longitude-precision2" author="EugnR">
+        <comment>Поля широты и долготы изменены для хранения двух дополнительных знаков после запятой</comment>
+        <modifyDataType
+                tableName="transport"
+                columnName="latitude"
+                newDataType="DECIMAL(20,16)"/>
+
+        <modifyDataType
+                tableName="transport"
+                columnName="longitude"
+                newDataType="DECIMAL(20,16)"/>
+    </changeSet>
+
+</databaseChangeLog>
