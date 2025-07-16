@@ -22,7 +22,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(OwnerMismatchException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<String> handleEntityNotFoundException(final OwnerMismatchException ex) {
+    public ResponseEntity<String> handleOwnerMismatchException(final OwnerMismatchException ex) {
         if (log.isErrorEnabled()) {
             log.error(ex.getMessage());
         }
