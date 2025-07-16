@@ -82,12 +82,12 @@ public class TransportServiceImpl implements TransportService {
     public void deleteTransport(final Long id) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        final User owner = userDetails.getUser();
+        final User user = userDetails.getUser();
 
         final Transport transport = transportRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transport to delete is not found"));
 
-        if (transport.getOwner().equals(owner)) {
+        if (transport.getOwner().equals(user)) {
             transportRepository.delete(transport);
         } else {
             throw new OwnerMismatchException("Not the transport's owner");
