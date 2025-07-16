@@ -1,8 +1,8 @@
 package ru.transport.rent.service.transport;
 
-import java.util.NoSuchElementException;
 import java.util.Set;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -69,7 +69,7 @@ public class TransportServiceImpl implements TransportService {
     @Override
     public void updateTransportDetails(final Long id, final RequestUpdateTransportDTO updateTransportDTO) {
         final Transport currentTransport = transportRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Transport to update is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Transport to update is not found"));
         transportMapper.mapUpdateTransportDtoToTransport(updateTransportDTO, currentTransport);
         transportRepository.save(currentTransport);
     }

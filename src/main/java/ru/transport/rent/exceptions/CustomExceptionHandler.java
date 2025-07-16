@@ -1,7 +1,6 @@
 package ru.transport.rent.exceptions;
 
-import java.util.NoSuchElementException;
-
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     /**
-     * Обработчик NoSuchElementException, для случаев когда объект в репозитории найден не был.
+     * Обработчик EntityNotFoundException, для случаев когда объект в репозитории найден не был.
      */
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleNoSuchElementException(final NoSuchElementException ex) {
+    public ResponseEntity<String> handleEntityNotFoundException(final EntityNotFoundException ex) {
         if (log.isErrorEnabled()) {
             log.error(ex.getMessage());
         }
