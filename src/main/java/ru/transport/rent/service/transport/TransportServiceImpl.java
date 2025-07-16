@@ -79,12 +79,12 @@ public class TransportServiceImpl implements TransportService {
      * Метод для удаления транспорта по id.
      */
     @Override
-    public void deleteTransport(Long id) {
+    public void deleteTransport(final Long id) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         final User owner = userDetails.getUser();
 
-        Transport transport = transportRepository.findById(id)
+        final Transport transport = transportRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transport to delete is not found"));
 
         if (transport.getOwner().equals(owner)) {

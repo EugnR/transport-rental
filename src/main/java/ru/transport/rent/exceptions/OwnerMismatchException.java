@@ -10,7 +10,7 @@ public class OwnerMismatchException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public OwnerMismatchException(String message) {
+    public OwnerMismatchException(final String message) {
         super(message);
     }
 }
