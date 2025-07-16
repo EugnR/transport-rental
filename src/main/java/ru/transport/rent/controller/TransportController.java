@@ -2,6 +2,7 @@ package ru.transport.rent.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,15 @@ public class TransportController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTransport(@PathVariable final Long id, @RequestBody final RequestUpdateTransportDTO updateTransportDTO) {
         transportService.updateTransportDetails(id, updateTransportDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Метод для удаления транспорта по id.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTransport(@PathVariable final Long id) {
+        transportService.deleteTransport(id);
         return ResponseEntity.ok().build();
     }
 }

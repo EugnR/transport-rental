@@ -18,6 +18,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     /**
+     * Обработчик OwnerMismatchException, для случаев когда пользователь пытается удалить транспорт, хозяином которого не является.
+     */
+    @ExceptionHandler(OwnerMismatchException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<String> handleEntityNotFoundException(final OwnerMismatchException ex) {
+        if (log.isErrorEnabled()) {
+            log.error(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    /**
      * Обработчик EntityNotFoundException, для случаев когда объект в репозитории найден не был.
      */
     @ExceptionHandler(EntityNotFoundException.class)

@@ -16,6 +16,7 @@ import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
 import ru.transport.rent.entity.Transport;
 import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
+import ru.transport.rent.exceptions.OwnerMismatchException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.TransportRepository;
 import ru.transport.rent.security.UserDetailsImpl;
@@ -72,5 +73,24 @@ public class TransportServiceImpl implements TransportService {
                 .orElseThrow(() -> new EntityNotFoundException("Transport to update is not found"));
         transportMapper.mapUpdateTransportDtoToTransport(updateTransportDTO, currentTransport);
         transportRepository.save(currentTransport);
+    }
+
+    /**
+     * Метод для удаления транспорта по id.
+     */
+    @Override
+    public void deleteTransport(Long id) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        final User owner = userDetails.getUser();
+
+        Transport transport = transportRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transport to delete is not found"));
+
+        if (transport.getOwner().equals(owner)) {
+            transportRepository.delete(transport);
+        } else {
+            throw new OwnerMismatchException("Not the transport's owner");
+        }
     }
 }
