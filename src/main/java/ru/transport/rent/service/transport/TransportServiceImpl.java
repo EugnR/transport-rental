@@ -5,8 +5,6 @@ import java.util.Set;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +17,7 @@ import ru.transport.rent.exceptions.InvalidTransportTypeException;
 import ru.transport.rent.exceptions.OwnerMismatchException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.TransportRepository;
-import ru.transport.rent.security.UserDetailsImpl;
+import ru.transport.rent.security.AuthenticationService;
 
 /**
  * Реализация интерфейса TransportService для обслуживания TransportController.
@@ -42,15 +40,13 @@ public class TransportServiceImpl implements TransportService {
     @Transactional
     public void registerTransport(final RequestRegisterTransportDTO registerTransportDTO) {
 
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        final User owner = userDetails.getUser();
         final String transportType = registerTransportDTO.getTransportType();
 
         if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
             throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
         }
 
+        final User owner = AuthenticationService.getUserFromSecurityContext();
         final Transport newTransport = transportMapper.mapRegisterTransportDtoToTransport(registerTransportDTO);
         newTransport.setOwner(owner);
 
@@ -80,9 +76,7 @@ public class TransportServiceImpl implements TransportService {
      */
     @Override
     public void deleteTransport(final Long id) {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        final UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        final User user = userDetails.getUser();
+        final User user = AuthenticationService.getUserFromSecurityContext();
 
         final Transport transport = transportRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transport to delete is not found"));
@@ -93,4 +87,6 @@ public class TransportServiceImpl implements TransportService {
             throw new OwnerMismatchException("Not the transport's owner");
         }
     }
+
+
 }
