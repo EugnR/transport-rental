@@ -221,4 +221,53 @@ class TransportControllerTest extends AbstractMainTest {
         assertThat(transportAfter.getDayPrice()).isEqualTo(4000.0);
 
     }
+
+    @Test
+    @DisplayName("delete transport")
+    public void testShouldDeleteTransport() throws Exception {
+        //region register, sign in, get jwt and register transport
+        final String userRegistrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegistrationJson)
+        );
+
+        final String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        String jwt = authResult.getResponse().getContentAsString();
+
+        final String transportRegistrationJson = CommonUtils
+                .getJsonFromResource("transport-controller/RequestRegisterTransport.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Transport")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(transportRegistrationJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+//endregion
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/api/Transport/1")
+                                .header("Authorization", "Bearer " + jwt)
+                )
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+
+        final List<Transport> all = transportRepository.findAll();
+        Assertions.assertEquals(0, all.size());
+
+    }
 }
