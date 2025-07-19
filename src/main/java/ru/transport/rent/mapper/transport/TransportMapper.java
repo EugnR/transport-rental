@@ -7,6 +7,7 @@ import org.mapstruct.MappingTarget;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
 import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
+import ru.transport.rent.dto.transport.TransportAroundInfoDTO;
 import ru.transport.rent.entity.Transport;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
@@ -28,4 +29,9 @@ public interface TransportMapper {
      * Метод для сопоставления полей из RequestUpdateTransportDTO в Transport.
      */
     void mapUpdateTransportDtoToTransport(RequestUpdateTransportDTO updateTransportDTO, @MappingTarget Transport transport);
+
+    /**
+     * Метод для сопоставления поле из Transport в TransportAroundInfoDTO.
+     */
+    TransportAroundInfoDTO mapTransportToTransportInfoDto(Transport transport);
 }
