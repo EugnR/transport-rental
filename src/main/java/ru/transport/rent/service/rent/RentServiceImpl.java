@@ -20,7 +20,8 @@ import ru.transport.rent.utils.TransportUtils;
 @Slf4j
 public class RentServiceImpl implements RentService {
 
-    private final Double metersToKilometers = 1000.0;
+    private final static Double METERS_TO_KILOMETERS = 1000.0;
+    private static final String ALL_TRANSPORT = "All";
 
     private final RentRepository rentRepository;
     private final TransportMapper transportMapper;
@@ -34,15 +35,16 @@ public class RentServiceImpl implements RentService {
      * @param type      тип транспортного средства.
      * @return список подходящих транспортных средств.
      */
-    public List<TransportAroundInfoDTO> findAvaliableTransport(Double latitude, Double longitude, Double radius, String type) {
+    @Override
+    public List<TransportAroundInfoDTO> findAvailableTransport(final Double latitude, final Double longitude, final Double radius, final String type) {
         if (!transportTypesConfig.getValidTypesAsSet().contains(
                 TransportUtils.normalizeTransportType(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
         }
-        if (type.equals("All")) {
-            return getAllTransportInRadius(latitude, longitude, radius / metersToKilometers);
+        if (ALL_TRANSPORT.equals(type)) {
+            return getAllTransportInRadius(latitude, longitude, radius / METERS_TO_KILOMETERS);
         } else {
-            return getSpecificTransportInRadius(latitude, longitude, radius / metersToKilometers, type);
+            return getSpecificTransportInRadius(latitude, longitude, radius / METERS_TO_KILOMETERS, type);
         }
     }
 
@@ -50,7 +52,7 @@ public class RentServiceImpl implements RentService {
      * Метод для поиска любого доступного транспорта в радиусе.
      */
     @Override
-    public List<TransportAroundInfoDTO> getAllTransportInRadius(Double latitude, Double longitude, Double radius) {
+    public List<TransportAroundInfoDTO> getAllTransportInRadius(final Double latitude, final Double longitude, final Double radius) {
         return rentRepository.findAllAvailableTransportInRadius(latitude, longitude, radius)
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)
@@ -61,7 +63,7 @@ public class RentServiceImpl implements RentService {
      * Метод для поиска доступного транспорта определённого типа в радиусе.
      */
     @Override
-    public List<TransportAroundInfoDTO> getSpecificTransportInRadius(Double latitude, Double longitude, Double radius, String type) {
+    public List<TransportAroundInfoDTO> getSpecificTransportInRadius(final Double latitude, final Double longitude, final Double radius, final String type) {
         return rentRepository.findSpecificTransportsInRadius(latitude, longitude, radius, type)
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)

@@ -23,9 +23,9 @@ public class RentController {
      * Эндпоинт для обработки запроса на поиск транспорта в радиусе.
      */
     @GetMapping("/Transport")
-    ResponseEntity<?> getTransportAround(@RequestBody RequestTransportAroundDTO request) {
+    public ResponseEntity<?> getTransportAround(@RequestBody final RequestTransportAroundDTO request) {
         return ResponseEntity.ok().body(
-                rentService.findAvaliableTransport(request.getLatitude(), request.getLongitude(), request.getRadius(), request.getType()));
+                rentService.findAvailableTransport(request.getLatitude(), request.getLongitude(), request.getRadius(), request.getType()));
     }
 
 

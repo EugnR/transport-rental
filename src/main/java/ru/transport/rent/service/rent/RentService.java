@@ -17,7 +17,7 @@ public interface RentService {
      * @param type      тип транспортного средства.
      * @return список подходящих транспортных средств.
      */
-    List<TransportAroundInfoDTO> findAvaliableTransport(Double latitude, Double longitude, Double radius, String type);
+    List<TransportAroundInfoDTO> findAvailableTransport(Double latitude, Double longitude, Double radius, String type);
 
     /**
      * Метод для поиска любого доступного транспорта в радиусе.

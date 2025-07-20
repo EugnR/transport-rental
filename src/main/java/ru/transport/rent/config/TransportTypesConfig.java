@@ -3,6 +3,7 @@ package ru.transport.rent.config;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "transport")
+@SuppressWarnings("PMD.AtLeastOneConstructor")
+@Setter
 public class TransportTypesConfig {
 
     private Set<String> validTypes;
@@ -22,9 +25,5 @@ public class TransportTypesConfig {
         return validTypes.stream()
                 .map(String::trim)
                 .collect(Collectors.toUnmodifiableSet());
-    }
-
-    public void setValidTypes(final Set<String> validTypes) {
-        this.validTypes = validTypes;
     }
 }
