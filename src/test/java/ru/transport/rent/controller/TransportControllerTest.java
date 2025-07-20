@@ -151,7 +151,7 @@ class TransportControllerTest extends AbstractMainTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.model").value("Toyota"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.color").value("White"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.identifier").value("om777j"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("A white toyota with license plate number om777j"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("A white toyota with license plate number om777j inside of the uni building"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.latitude").value(Matchers.closeTo(53.225775091771084, 0.0000001)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.longitude").value(Matchers.closeTo(50.19476734475567, 0.0000001)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.minutePrice").value(15.0))

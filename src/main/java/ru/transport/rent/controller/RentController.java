@@ -23,10 +23,10 @@ public class RentController {
      */
     @GetMapping("/Transport")
     public ResponseEntity<?> getTransportAround(
-            @RequestParam Double lat,
-            @RequestParam Double lon,
-            @RequestParam Double radius,
-            @RequestParam String type) {
+            @RequestParam final Double lat,
+            @RequestParam final Double lon,
+            @RequestParam final Double radius,
+            @RequestParam final String type) {
         return ResponseEntity.ok().body(rentService.findAvailableTransport(lat, lon, radius, type));
     }
 

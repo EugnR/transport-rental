@@ -20,7 +20,7 @@ import ru.transport.rent.utils.TransportUtils;
 @Slf4j
 public class RentServiceImpl implements RentService {
 
-    private final static Double METERS_TO_KILOMETERS = 1000.0;
+    private static final Double METERS_TO_KILOMETERS = 1000.0;
     private static final String ALL_TRANSPORT = "All";
 
     private final TransportMapper transportMapper;
@@ -36,7 +36,12 @@ public class RentServiceImpl implements RentService {
      * @return список подходящих транспортных средств.
      */
     @Override
-    public List<TransportAroundInfoDTO> findAvailableTransport(final Double latitude, final Double longitude, Double radius, final String type) {
+    public List<TransportAroundInfoDTO> findAvailableTransport(
+            final Double latitude,
+            final Double longitude,
+            final Double radius,
+            final String type
+    ) {
         if (!transportTypesConfig.getValidTypesAsSet().contains(
                 TransportUtils.normalizeTransportType(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
@@ -52,7 +57,11 @@ public class RentServiceImpl implements RentService {
      * Метод для поиска любого доступного транспорта в радиусе.
      */
     @Override
-    public List<TransportAroundInfoDTO> getAllTransportInRadius(final Double latitude, final Double longitude, final Double radius) {
+    public List<TransportAroundInfoDTO> getAllTransportInRadius(
+            final Double latitude,
+            final Double longitude,
+            final Double radius
+    ) {
         return transportRepository.findAllAvailableTransportInRadius(latitude, longitude, radius)
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)
@@ -63,7 +72,12 @@ public class RentServiceImpl implements RentService {
      * Метод для поиска доступного транспорта определённого типа в радиусе.
      */
     @Override
-    public List<TransportAroundInfoDTO> getSpecificTransportInRadius(final Double latitude, final Double longitude, final Double radius, final String type) {
+    public List<TransportAroundInfoDTO> getSpecificTransportInRadius(
+            final Double latitude,
+            final Double longitude,
+            final Double radius,
+            final String type
+    ) {
         return transportRepository.findSpecificTransportsInRadius(latitude, longitude, radius, type)
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)

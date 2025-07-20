@@ -2,7 +2,6 @@ package ru.transport.rent.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -10,12 +9,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.transport.rent.AbstractMainTest;
 import ru.transport.rent.CommonUtils;
-import ru.transport.rent.repository.TransportRepository;
 
 public class RentControllerTest extends AbstractMainTest {
 
-    @Autowired
-    private TransportRepository transportRepository;
 
     @Test
     @DisplayName("finding all transport around")
@@ -67,8 +63,6 @@ public class RentControllerTest extends AbstractMainTest {
 //endregion
 
 
-        final String getAllTransportAroundJson = CommonUtils
-                .getJsonFromResource("rent-controller/RequestGetAllTransportAround.json");
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/Rent/Transport")
                                 .param("lat", "53.2257244")
