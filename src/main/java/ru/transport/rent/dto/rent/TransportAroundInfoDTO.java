@@ -1,4 +1,4 @@
-package ru.transport.rent.dto.transport;
+package ru.transport.rent.dto.rent;
 
 import lombok.Builder;
 import lombok.Data;

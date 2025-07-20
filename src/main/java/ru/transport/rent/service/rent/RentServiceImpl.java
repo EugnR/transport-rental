@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.transport.rent.config.TransportTypesConfig;
-import ru.transport.rent.dto.transport.TransportAroundInfoDTO;
+import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
+import ru.transport.rent.entity.Transport;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.RentRepository;
+import ru.transport.rent.repository.TransportRepository;
 import ru.transport.rent.utils.TransportUtils;
 
 /**
@@ -26,6 +28,7 @@ public class RentServiceImpl implements RentService {
     private final RentRepository rentRepository;
     private final TransportMapper transportMapper;
     private final TransportTypesConfig transportTypesConfig;
+    private final TransportRepository transportRepository;
 
     /**
      * Метод валидирует полученный тип транспорта и выбирает какой поиск производить, а также переводит метры в километры.
@@ -36,7 +39,7 @@ public class RentServiceImpl implements RentService {
      * @return список подходящих транспортных средств.
      */
     @Override
-    public List<TransportAroundInfoDTO> findAvailableTransport(final Double latitude, final Double longitude, final Double radius, final String type) {
+    public List<TransportAroundInfoDTO> findAvailableTransport(final Double latitude, final Double longitude, Double radius, final String type) {
         if (!transportTypesConfig.getValidTypesAsSet().contains(
                 TransportUtils.normalizeTransportType(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
@@ -53,10 +56,16 @@ public class RentServiceImpl implements RentService {
      */
     @Override
     public List<TransportAroundInfoDTO> getAllTransportInRadius(final Double latitude, final Double longitude, final Double radius) {
-        return rentRepository.findAllAvailableTransportInRadius(latitude, longitude, radius)
+        List<Transport> tempList = transportRepository.findAllAvailableTransportInRadius(latitude, longitude, radius);
+
+        return tempList
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)
                 .toList();
+//        return rentRepository.findAllAvailableTransportInRadius(latitude, longitude, radius)
+//                .stream()
+//                .map(transportMapper::mapTransportToTransportInfoDto)
+//                .toList();
     }
 
     /**
@@ -64,7 +73,7 @@ public class RentServiceImpl implements RentService {
      */
     @Override
     public List<TransportAroundInfoDTO> getSpecificTransportInRadius(final Double latitude, final Double longitude, final Double radius, final String type) {
-        return rentRepository.findSpecificTransportsInRadius(latitude, longitude, radius, type)
+        return transportRepository.findSpecificTransportsInRadius(latitude, longitude, radius, type)
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)
                 .toList();

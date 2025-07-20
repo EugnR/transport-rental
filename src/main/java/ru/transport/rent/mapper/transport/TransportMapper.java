@@ -4,10 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
+import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
 import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
-import ru.transport.rent.dto.transport.TransportAroundInfoDTO;
 import ru.transport.rent.entity.Transport;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

@@ -1,0 +1,14 @@
+{
+  "canBeRented": true,
+  "transportType": "Scooter",
+  "model": "Whoosh",
+  "color": "Yellow",
+  "identifier": "aj17h",
+  "description": "A yellow Whoosh scooter with license plate number aj17h",
+  "latitude": 53.226065,
+  "longitude": 50.194703,
+  "minutePrice": 5.0,
+  "dayPrice": 2000.0
+}
+
+

@@ -2,7 +2,7 @@ package ru.transport.rent.service.rent;
 
 import java.util.List;
 
-import ru.transport.rent.dto.transport.TransportAroundInfoDTO;
+import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
 
 /**
  * Интерфейс для rent.
