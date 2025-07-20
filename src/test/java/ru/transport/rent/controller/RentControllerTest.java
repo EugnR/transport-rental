@@ -2,6 +2,7 @@ package ru.transport.rent.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -9,14 +10,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.transport.rent.AbstractMainTest;
 import ru.transport.rent.CommonUtils;
+import ru.transport.rent.repository.TransportRepository;
 
 public class RentControllerTest extends AbstractMainTest {
+
+    @Autowired
+    private TransportRepository transportRepository;
 
     @Test
     @DisplayName("finding all transport around")
     void testShouldFindAllTransportAround() throws Exception {
 
-        //region register, sign in, get jwt and register transport
+        //region register, sign in, get jwt and register 2 transports
         final String userRegistrationJson = CommonUtils
                 .getJsonFromResource("user-controller/RequestRegistrationUser.json");
         mockMvc.perform(
@@ -66,13 +71,17 @@ public class RentControllerTest extends AbstractMainTest {
                 .getJsonFromResource("rent-controller/RequestGetAllTransportAround.json");
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/Rent/Transport")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(getAllTransportAroundJson)
+                                .param("lat", "53.2257244")
+                                .param("lon", "50.1945633")
+                                .param("radius", "250")
+                                .param("type", "All")
                 ).andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status()
-                        .isOk());
-
-
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].model").value("Toyota"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].identifier").value("om777j"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].model").value("Whoosh"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].identifier").value("aj17h"));
 
     }
 }

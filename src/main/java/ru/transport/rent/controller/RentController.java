@@ -21,18 +21,12 @@ public class RentController {
     /**
      * Эндпоинт для обработки запроса на поиск транспорта в радиусе.
      */
-//    @GetMapping("/Transport")
-//    public ResponseEntity<?> getTransportAround(@RequestBody final RequestTransportAroundDTO request) {
-//        rentService.findAvailableTransport(request.getLatitude(), request.getLongitude(), request.getRadius(), request.getType());
-//        return ResponseEntity.ok().build();
-//    }
     @GetMapping("/Transport")
     public ResponseEntity<?> getTransportAround(
             @RequestParam Double lat,
             @RequestParam Double lon,
             @RequestParam Double radius,
             @RequestParam String type) {
-        ;
         return ResponseEntity.ok().body(rentService.findAvailableTransport(lat, lon, radius, type));
     }
 
