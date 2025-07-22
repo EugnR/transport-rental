@@ -11,7 +11,7 @@ import ru.transport.rent.exceptions.InvalidTransportTypeException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.TransportRepository;
 import ru.transport.rent.utils.TransportUtils;
-
+import ru.transport.rent.config.UtilVarsConfig;
 /**
  * Реализация интерфейса RentService для обслуживания RentController.
  */
@@ -19,9 +19,6 @@ import ru.transport.rent.utils.TransportUtils;
 @RequiredArgsConstructor
 @Slf4j
 public class RentServiceImpl implements RentService {
-
-    private static final Double METERS_TO_KILOMETERS = 1000.0;
-    private static final String ALL_TRANSPORT = "All";
 
     private final TransportMapper transportMapper;
     private final TransportTypesConfig transportTypesConfig;
@@ -46,10 +43,10 @@ public class RentServiceImpl implements RentService {
                 TransportUtils.normalizeTransportType(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
         }
-        if (ALL_TRANSPORT.equals(type)) {
-            return getAllTransportInRadius(latitude, longitude, radius / METERS_TO_KILOMETERS);
+        if (UtilVarsConfig.ALL_TRANSPORT.equals(type)) {
+            return getAllTransportInRadius(latitude, longitude, radius / UtilVarsConfig.METERS_TO_KILOMETERS);
         } else {
-            return getSpecificTransportInRadius(latitude, longitude, radius / METERS_TO_KILOMETERS, type);
+            return getSpecificTransportInRadius(latitude, longitude, radius / UtilVarsConfig.METERS_TO_KILOMETERS, type);
         }
     }
 
