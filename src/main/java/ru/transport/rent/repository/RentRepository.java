@@ -1,11 +1,10 @@
 package ru.transport.rent.repository;
 
-import ru.transport.rent.entity.Rent;
-
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.transport.rent.entity.Rent;
 
 
 /**
@@ -25,4 +24,5 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
      * @return список аренд связанных с пользователем
      */
     List<Rent> findByUserId(Long userId);
+
 }

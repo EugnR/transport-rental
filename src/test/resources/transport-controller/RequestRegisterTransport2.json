@@ -1,0 +1,13 @@
+{
+  "canBeRented": true,
+  "transportType": "Scooter",
+  "model": "Whoosh",
+  "color": "Yellow",
+  "identifier": "aj17h",
+  "description": "A yellow Whoosh on uni parking lot",
+  "latitude": 53.225095,
+  "longitude": 50.197378,
+  "minutePrice": 5.0,
+  "dayPrice": 2000.0
+}
+
