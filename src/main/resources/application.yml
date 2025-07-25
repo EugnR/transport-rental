@@ -47,3 +47,10 @@ jwt:
   issuer: course
   secret: J7gzxsdfdsdsfsklill234czxcQgfJ7gQgfczxc
   tokenExpiresIn: 432000
+
+transport:
+  valid-types:
+    - All
+    - Car
+    - Bike
+    - Scooter

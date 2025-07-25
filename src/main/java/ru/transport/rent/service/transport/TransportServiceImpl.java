@@ -1,13 +1,12 @@
 package ru.transport.rent.service.transport;
 
-import java.util.Set;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.transport.rent.config.TransportTypesConfig;
 import ru.transport.rent.dto.transport.RequestRegisterTransportDTO;
 import ru.transport.rent.dto.transport.RequestTransportDetailsDTO;
 import ru.transport.rent.dto.transport.RequestUpdateTransportDTO;
@@ -18,6 +17,7 @@ import ru.transport.rent.exceptions.OwnerMismatchException;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.TransportRepository;
 import ru.transport.rent.security.AuthenticationService;
+import ru.transport.rent.utils.TransportUtils;
 
 /**
  * Реализация интерфейса TransportService для обслуживания TransportController.
@@ -27,10 +27,9 @@ import ru.transport.rent.security.AuthenticationService;
 @Slf4j
 public class TransportServiceImpl implements TransportService {
 
-    private static final Set<String> VALID_TRANSPORT_TYPES = Set.of("Car", "Bike", "Scooter");
-
     private final TransportRepository transportRepository;
     private final TransportMapper transportMapper;
+    private final TransportTypesConfig transportTypesConfig;
 
 
     /**
@@ -42,7 +41,8 @@ public class TransportServiceImpl implements TransportService {
 
         final String transportType = registerTransportDTO.getTransportType();
 
-        if (!VALID_TRANSPORT_TYPES.contains(transportType)) {
+        if (!transportTypesConfig.getValidTypesAsSet().contains(
+                TransportUtils.normalizeTransportType(transportType))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
         }
 
