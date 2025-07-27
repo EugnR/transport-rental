@@ -3,6 +3,8 @@ package ru.transport.rent.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,13 @@ public class RentController {
         return ResponseEntity.ok().body(rentService.findAvailableTransport(lat, lon, radius, type));
     }
 
-
+    /**
+     * Эндпоинт для создания новой аренды.
+     */
+    @PostMapping("/New/{transportId}")
+    public ResponseEntity<?> createNewRent(@PathVariable final Long transportId, @RequestParam final String rentType){
+        rentService.createRent(transportId, rentType);
+        return ResponseEntity.ok().build();
+    }
 
 }

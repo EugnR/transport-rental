@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
                 .getName(), tokenExpiresIn);
     }
 
-
     /**
      * Метод для возвращения информации об аккаунте.
      */

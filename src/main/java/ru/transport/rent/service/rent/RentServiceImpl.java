@@ -1,17 +1,26 @@
 package ru.transport.rent.service.rent;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.transport.rent.config.TransportTypesConfig;
-import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
-import ru.transport.rent.exceptions.InvalidTransportTypeException;
-import ru.transport.rent.mapper.transport.TransportMapper;
-import ru.transport.rent.repository.TransportRepository;
-import ru.transport.rent.utils.TransportUtils;
 import ru.transport.rent.config.UtilVarsConfig;
+import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
+import ru.transport.rent.entity.Rent;
+import ru.transport.rent.entity.Transport;
+import ru.transport.rent.entity.User;
+import ru.transport.rent.exceptions.InvalidRentTypeException;
+import ru.transport.rent.exceptions.InvalidTransportTypeException;
+import ru.transport.rent.exceptions.OwnerMismatchException;
+import ru.transport.rent.mapper.transport.TransportMapper;
+import ru.transport.rent.repository.RentRepository;
+import ru.transport.rent.repository.TransportRepository;
+import ru.transport.rent.security.AuthenticationService;
+import ru.transport.rent.utils.CustomUtils;
 /**
  * Реализация интерфейса RentService для обслуживания RentController.
  */
@@ -23,6 +32,7 @@ public class RentServiceImpl implements RentService {
     private final TransportMapper transportMapper;
     private final TransportTypesConfig transportTypesConfig;
     private final TransportRepository transportRepository;
+    private final RentRepository rentRepository;
 
     /**
      * Метод валидирует полученный тип транспорта и выбирает какой поиск производить, а также переводит метры в километры.
@@ -40,7 +50,7 @@ public class RentServiceImpl implements RentService {
             final String type
     ) {
         if (!transportTypesConfig.getValidTypesAsSet().contains(
-                TransportUtils.normalizeTransportType(type))) {
+                CustomUtils.CapitalizeFirst(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
         }
         if (UtilVarsConfig.ALL_TRANSPORT.equals(type)) {
@@ -79,5 +89,42 @@ public class RentServiceImpl implements RentService {
                 .stream()
                 .map(transportMapper::mapTransportToTransportInfoDto)
                 .toList();
+    }
+
+    /**
+     * Метод для создания новой аренды.
+     *
+     * @param transportId id транспорта, который берётся в аренду.
+     * @param typeOfRent  - тип аренды (минуты или дни)
+     */
+    @Override
+    public void createRent(Long transportId, String typeOfRent) {
+
+        typeOfRent = CustomUtils.CapitalizeFirst(typeOfRent);
+        Double price;
+
+        User user = AuthenticationService.getUserFromSecurityContext();
+
+        Transport transportToSave = transportRepository.findById(transportId)
+                .orElseThrow(() -> new EntityNotFoundException("Transport for rent is not found"));
+
+        if (typeOfRent.equals("Minutes")) { price = transportToSave.getMinutePrice(); }
+        else if (typeOfRent.equals("Days")) { price = transportToSave.getDayPrice(); }
+        else { throw new InvalidRentTypeException("Invalid rent type: " + typeOfRent); }
+
+        if (transportToSave.getOwner().equals(user)) {
+            throw new OwnerMismatchException("Owner can't rent his own transport");
+        }
+
+        Rent rent = Rent.builder()
+                .transport(transportToSave)
+                .user(user)
+                .timeStart(LocalDateTime.now())
+                .timeEnd(null)      //установится при завершении аренды
+                .priceOfUnit(price)
+                .priceType(typeOfRent)
+                .finalPrice(null)   //установится при завершении аренды
+                .build();
+        rentRepository.save(rent);
     }
 }
