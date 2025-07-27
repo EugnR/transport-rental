@@ -14,7 +14,7 @@ public final class CustomUtils {
     /**
      * Метод переводит первую букву строки в верхний регистр, а последующие - в нижний.
      */
-    public static String CapitalizeFirst(final String type) {
+    public static String capitalizeFirst(final String type) {
         if (type == null || type.isBlank()) {
             return null;
         }

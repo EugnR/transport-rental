@@ -22,7 +22,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(SelfRentalNotAllowedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<String> handleSelfRentalNotAllowedException(SelfRentalNotAllowedException ex){
+    public ResponseEntity<String> handleSelfRentalNotAllowedException(final SelfRentalNotAllowedException ex) {
         if (log.isDebugEnabled()) {
             log.debug(ex.getMessage());
         }
@@ -34,7 +34,7 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(InvalidRentTypeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleInvalidRentTypeException(InvalidRentTypeException ex) {
+    public ResponseEntity<String> handleInvalidRentTypeException(final InvalidRentTypeException ex) {
         if (log.isErrorEnabled()) {
             log.error(ex.getMessage());
         }

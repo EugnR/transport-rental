@@ -3,7 +3,6 @@ package ru.transport.rent.service.transport;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.transport.rent.config.TransportTypesConfig;
@@ -42,7 +41,7 @@ public class TransportServiceImpl implements TransportService {
         final String transportType = registerTransportDTO.getTransportType();
 
         if (!transportTypesConfig.getValidTypesAsSet().contains(
-                CustomUtils.CapitalizeFirst(transportType))) {
+                CustomUtils.capitalizeFirst(transportType))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + transportType);
         }
 
@@ -57,7 +56,7 @@ public class TransportServiceImpl implements TransportService {
     public RequestTransportDetailsDTO getTransportDetails(final Long id) {
         return transportMapper.mapTransportToTransportDetailsDto(
                 transportRepository.findById(id)
-                        .orElseThrow(() -> new UsernameNotFoundException("Transport not found")));  //FIXME должно быть исколючение EntityNotFoundException
+                        .orElseThrow(() -> new EntityNotFoundException("Transport to get details is not found")));
     }
 
     /**

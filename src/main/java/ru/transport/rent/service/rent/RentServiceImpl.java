@@ -50,7 +50,7 @@ public class RentServiceImpl implements RentService {
             final String type
     ) {
         if (!transportTypesConfig.getValidTypesAsSet().contains(
-                CustomUtils.CapitalizeFirst(type))) {
+                CustomUtils.capitalizeFirst(type))) {
             throw new InvalidTransportTypeException("Invalid transport type: " + type);
         }
         if (UtilVarsConfig.ALL_TRANSPORT.equals(type)) {
@@ -98,31 +98,35 @@ public class RentServiceImpl implements RentService {
      * @param typeOfRent  - тип аренды (минуты или дни)
      */
     @Override
-    public void createRent(Long transportId, String typeOfRent) {
+    public void createRent(final Long transportId, final String typeOfRent) {
 
-        typeOfRent = CustomUtils.CapitalizeFirst(typeOfRent);
-        Double price;
+        final String normalizedTypeOfRent = CustomUtils.capitalizeFirst(typeOfRent);
+        final Double price;
 
-        User user = AuthenticationService.getUserFromSecurityContext();
-
-        Transport transportToSave = transportRepository.findById(transportId)
+        final Transport rentedTransport = transportRepository.findById(transportId)
                 .orElseThrow(() -> new EntityNotFoundException("Transport for rent is not found"));
 
-        if (typeOfRent.equals("Minutes")) { price = transportToSave.getMinutePrice(); }
-        else if (typeOfRent.equals("Days")) { price = transportToSave.getDayPrice(); }
-        else { throw new InvalidRentTypeException("Invalid rent type: " + typeOfRent); }
+        if (normalizedTypeOfRent.equals(UtilVarsConfig.MINUTES)) {
+            price = rentedTransport.getMinutePrice();
+        } else if (normalizedTypeOfRent.equals(UtilVarsConfig.DAYS)) {
+            price = rentedTransport.getDayPrice();
+        } else {
+            throw new InvalidRentTypeException("Invalid rent type: " + normalizedTypeOfRent);
+        }
 
-        if (transportToSave.getOwner().equals(user)) {
+        final User user = AuthenticationService.getUserFromSecurityContext();
+
+        if (rentedTransport.getOwner().equals(user)) {
             throw new OwnerMismatchException("Owner can't rent his own transport");
         }
 
-        Rent rent = Rent.builder()
-                .transport(transportToSave)
+        final Rent rent = Rent.builder()
+                .transport(rentedTransport)
                 .user(user)
                 .timeStart(LocalDateTime.now())
                 .timeEnd(null)      //установится при завершении аренды
                 .priceOfUnit(price)
-                .priceType(typeOfRent)
+                .priceType(normalizedTypeOfRent)
                 .finalPrice(null)   //установится при завершении аренды
                 .build();
         rentRepository.save(rent);

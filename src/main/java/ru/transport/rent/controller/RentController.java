@@ -36,7 +36,7 @@ public class RentController {
      * Эндпоинт для создания новой аренды.
      */
     @PostMapping("/New/{transportId}")
-    public ResponseEntity<?> createNewRent(@PathVariable final Long transportId, @RequestParam final String rentType){
+    public ResponseEntity<?> createNewRent(@PathVariable final Long transportId, @RequestParam final String rentType) {
         rentService.createRent(transportId, rentType);
         return ResponseEntity.ok().build();
     }

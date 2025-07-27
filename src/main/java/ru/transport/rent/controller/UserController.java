@@ -52,8 +52,8 @@ public class UserController {
      * Метод для возвращения пользователю информации об его аккаунте.
      */
     @GetMapping("/Me")
-    public ResponseEntity<?> me(final Principal principal) {    //TODO после выбора проверки на авторизованность в проекте (по методам или в url)
-        if (principal == null) {                                // решить, оставлять ли эту проверку
+    public ResponseEntity<?> me(final Principal principal) {
+        if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized lol");
         }
         return ResponseEntity.ok(userService.getUserDetails(principal));
