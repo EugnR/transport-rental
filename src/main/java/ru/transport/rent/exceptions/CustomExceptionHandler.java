@@ -18,6 +18,30 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     /**
+     * Обработчик SelfRentalNotAllowedException для случаев, когда пользователь пытается арендовать собственный транспорт.
+     */
+    @ExceptionHandler(SelfRentalNotAllowedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<String> handleSelfRentalNotAllowedException(final SelfRentalNotAllowedException ex) {
+        if (log.isDebugEnabled()) {
+            log.debug(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Обработчик InvalidRentTypeException для случаев, когда с клиента приходит неправильный тип аренды.
+     */
+    @ExceptionHandler(InvalidRentTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidRentTypeException(final InvalidRentTypeException ex) {
+        if (log.isErrorEnabled()) {
+            log.error(ex.getMessage());
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    /**
      * Обработчик OwnerMismatchException, для случаев когда пользователь пытается удалить транспорт, хозяином которого не является.
      */
     @ExceptionHandler(OwnerMismatchException.class)
