@@ -3,18 +3,18 @@ package ru.transport.rent.utils;
 import java.util.Locale;
 
 /**
- * Утилитарный класс для всяких методов используемых в логике работы с транспортом.
+ * Утилитарный класс для всяких методов используемых в логике.
  */
-public final class TransportUtils {
+public final class CustomUtils {
 
-    private TransportUtils() {
+    private CustomUtils() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
      * Метод переводит первую букву строки в верхний регистр, а последующие - в нижний.
      */
-    public static String normalizeTransportType(final String type) {
+    public static String capitalizeFirst(final String type) {
         if (type == null || type.isBlank()) {
             return null;
         }

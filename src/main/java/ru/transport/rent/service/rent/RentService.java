@@ -28,4 +28,11 @@ public interface RentService {
      * Метод для поиска доступного транспорта определённого типа в радиусе.
      */
     List<TransportAroundInfoDTO> getSpecificTransportInRadius(Double latitude, Double longitude, Double radius, String type);
+
+    /**
+     * Метод для создания новой аренды.
+     * @param transportId id транспорта, который берётся в аренду.
+     * @param typeOfRent - тип аренды (минуты или дни)
+     */
+    void createRent(Long transportId, String typeOfRent);
 }
