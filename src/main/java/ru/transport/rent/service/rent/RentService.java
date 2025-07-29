@@ -35,4 +35,9 @@ public interface RentService {
      * @param typeOfRent - тип аренды (минуты или дни)
      */
     void createRent(Long transportId, String typeOfRent);
+
+    /**
+     * Метод для заканчивания аренды.
+     */
+    void endRent(Long rentId, Double latitude, Double longitude);
 }

@@ -1,5 +1,6 @@
 package ru.transport.rent.service.rent;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -106,9 +107,9 @@ public class RentServiceImpl implements RentService {
         final Transport rentedTransport = transportRepository.findById(transportId)
                 .orElseThrow(() -> new EntityNotFoundException("Transport for rent is not found"));
 
-        if (normalizedTypeOfRent.equals(UtilVarsConfig.MINUTES)) {
+        if (UtilVarsConfig.MINUTES.equals(normalizedTypeOfRent)) {
             price = rentedTransport.getMinutePrice();
-        } else if (normalizedTypeOfRent.equals(UtilVarsConfig.DAYS)) {
+        } else if (UtilVarsConfig.DAYS.equals(normalizedTypeOfRent)) {
             price = rentedTransport.getDayPrice();
         } else {
             throw new InvalidRentTypeException("Invalid rent type: " + normalizedTypeOfRent);
@@ -120,6 +121,9 @@ public class RentServiceImpl implements RentService {
             throw new OwnerMismatchException("Owner can't rent his own transport");
         }
 
+        rentedTransport.setCanBeRented(false);
+        transportRepository.save(rentedTransport);
+
         final Rent rent = Rent.builder()
                 .transport(rentedTransport)
                 .user(user)
@@ -129,6 +133,42 @@ public class RentServiceImpl implements RentService {
                 .priceType(normalizedTypeOfRent)
                 .finalPrice(null)   //установится при завершении аренды
                 .build();
+
+        rentRepository.save(rent);
+    }
+
+    /**
+     * Метод для заканчивания аренды.
+     */
+    @Override
+    public void endRent(final Long rentId, final Double latitude, final Double longitude) {
+        final Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
+
+        final User user = AuthenticationService.getUserFromSecurityContext();
+        if (!user.equals(rent.getUser())) {
+            throw new OwnerMismatchException("Only owner can end his rent");
+        }
+
+        final Transport transport = rent.getTransport();
+        transport.setLatitude(latitude);
+        transport.setLongitude(longitude);
+
+        rent.setTimeEnd(LocalDateTime.now());
+        final Duration rentDuration = Duration.between(rent.getTimeStart(), rent.getTimeEnd());
+        final String rentType = rent.getPriceType();
+
+        if (UtilVarsConfig.MINUTES.equals(rentType)) {
+            rent.setFinalPrice(transport.getMinutePrice() * rentDuration.toMinutes());
+        } else if (UtilVarsConfig.DAYS.equals(rentType)) {
+            long days = rentDuration.toDays();
+            if (days == 0) {
+                days = 1;
+            }
+            rent.setFinalPrice(transport.getDayPrice() * days);
+        }
+
+        transport.setCanBeRented(true);
+        transportRepository.save(transport);
         rentRepository.save(rent);
     }
 }
