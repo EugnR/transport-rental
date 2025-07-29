@@ -42,7 +42,8 @@ public class CustomExceptionHandler {
     }
 
     /**
-     * Обработчик OwnerMismatchException, для случаев, когда идёт попытка модифицировать или удалить ресурс, владельцем которого является другой пользователь.
+     * Обработчик OwnerMismatchException, для случаев, когда идёт попытка модифицировать или удалить ресурс,
+     * владельцем которого является другой пользователь.
      */
     @ExceptionHandler(OwnerMismatchException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)

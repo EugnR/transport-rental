@@ -78,7 +78,7 @@ public class RentControllerTest extends AbstractMainTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/Rent/Transport")
                                 .param("lat", "53.2257244")
-                                .param("lon", "50.1945633")
+                                .param("long", "50.1945633")
                                 .param("radius", "250")
                                 .param("type", "All")
                 ).andDo(MockMvcResultHandlers.print())
