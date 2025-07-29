@@ -25,6 +25,52 @@ public class RentControllerTest extends AbstractMainTest {
     @Autowired
     TransportRepository transportRepository;
 
+    private String signUpAndSignInUser(final String regJsonPath, final String authJsonPath) throws Exception {
+        final String userRegistrationJson = CommonUtils
+                .getJsonFromResource(regJsonPath);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegistrationJson)
+        );
+
+        final String authJson = CommonUtils
+                .getJsonFromResource(authJsonPath);
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        return authResult.getResponse().getContentAsString();
+    }
+
+    private void registerTransport(final String jwt, final String transportDetailsJsonPath) throws Exception {
+        String transportRegistrationJson = CommonUtils
+                .getJsonFromResource(transportDetailsJsonPath);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Transport")
+                        .header("Authorization", "Bearer " + jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transportRegistrationJson)
+        );
+    }
+
+    private void createRent(final String jwt, final String transportId, final String rentType) throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Rent/New/" + transportId)
+                                .header("Authorization", "Bearer " + jwt)
+                                .param("rentType", rentType)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(1, allRents.size());
+    }
+
     @Test
     @DisplayName("finding all transport around")
     void testShouldFindAllTransportAround() throws Exception {
@@ -212,5 +258,100 @@ public class RentControllerTest extends AbstractMainTest {
         final List<Rent> allRents =rentRepository.findAll();
         Assertions.assertEquals(0, allRents.size());
 
+    }
+
+    @Test
+    @DisplayName("ending rent")
+    void testShouldEndRent() throws Exception {
+        //region register 1'st user, register 1'st user's car, register 2'nd user and create rent
+        String userRegistrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegistrationJson)
+        );
+
+        String authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser.json");
+        MvcResult authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        String jwt = authResult.getResponse().getContentAsString();
+
+        String transportRegistrationJson = CommonUtils
+                .getJsonFromResource("transport-controller/RequestRegisterTransport.json");
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Transport")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(transportRegistrationJson)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status()
+                        .isOk());
+
+        final List<Transport> allTransport = transportRepository.findAll();
+        Assertions.assertEquals(1, allTransport.size());
+
+
+        userRegistrationJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestRegistrationUser2.json");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Account/SignUp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegistrationJson)
+        );
+
+        authJson = CommonUtils
+                .getJsonFromResource("user-controller/RequestSignInUser2.json");
+        authResult = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Account/SignIn")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(authJson)
+                )
+                .andReturn();
+
+        jwt = authResult.getResponse().getContentAsString();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Rent/New/1")
+                                .header("Authorization", "Bearer " + jwt)
+                                .param("rentType", "Days")
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(1, allRents.size());
+        //endregion
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Rent/End/1")
+                        .header("Authorization", "Bearer " + jwt)
+                        .param("lat", "55.7539939")
+                        .param("long", "37.6220930")
+        ). andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("making sure that user can't end other's rent")
+    void testShouldNotLetEndOthersRent() throws Exception {
+        String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
+        createRent(jwtUser2, "1", "Days");
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/Rent/End/1")
+                .header("Authorization", "Bearer " + jwtUser1)
+                .param("lat", "55.7539939")
+                .param("long", "37.6220930")
+        ).andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 }
