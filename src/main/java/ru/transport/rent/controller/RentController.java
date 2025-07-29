@@ -41,4 +41,15 @@ public class RentController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Эндпоинт для завершения аренды.
+     */
+    @PostMapping("/End/{rentId}")
+    public ResponseEntity<?> endRent(
+            @PathVariable final Long rentId,
+            @RequestParam final Double lat,
+            @RequestParam final Double lon) {
+        rentService.endRent(rentId, lat, lon);
+        return ResponseEntity.ok().build();
+    }
 }

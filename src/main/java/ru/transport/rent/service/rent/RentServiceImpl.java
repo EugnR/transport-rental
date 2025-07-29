@@ -1,5 +1,6 @@
 package ru.transport.rent.service.rent;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -120,6 +121,9 @@ public class RentServiceImpl implements RentService {
             throw new OwnerMismatchException("Owner can't rent his own transport");
         }
 
+        rentedTransport.setCanBeRented(false);
+        transportRepository.save(rentedTransport);
+
         final Rent rent = Rent.builder()
                 .transport(rentedTransport)
                 .user(user)
@@ -129,6 +133,42 @@ public class RentServiceImpl implements RentService {
                 .priceType(normalizedTypeOfRent)
                 .finalPrice(null)   //установится при завершении аренды
                 .build();
+
+        rentRepository.save(rent);
+    }
+
+    /**
+     * Метод для заканчивания аренды.
+     */
+    @Override
+    public void endRent(Long rentId, Double latitude, Double longitude) {
+        Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
+
+        User user = AuthenticationService.getUserFromSecurityContext();
+        if (!user.equals(rent.getUser())) {
+            throw new OwnerMismatchException("Only owner can end his rent");
+        }
+
+        Transport transport = rent.getTransport();
+        transport.setLatitude(latitude);
+        transport.setLongitude(longitude);
+
+        rent.setTimeEnd(LocalDateTime.now());
+        Duration rentDuration = Duration.between(rent.getTimeStart(), rent.getTimeEnd());
+        String rentType = rent.getPriceType();
+
+        if (rentType.equals(UtilVarsConfig.MINUTES)) {
+            rent.setFinalPrice(transport.getMinutePrice() * rentDuration.toMinutes());
+        } else if (rentType.equals(UtilVarsConfig.DAYS)) {
+            long days = rentDuration.toDays();
+            if (days == 0) {
+                days = 1;
+            }
+            rent.setFinalPrice(transport.getDayPrice() * days);
+        }
+
+        transport.setCanBeRented(true);
+        transportRepository.save(transport);
         rentRepository.save(rent);
     }
 }
