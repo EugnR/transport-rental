@@ -107,9 +107,9 @@ public class RentServiceImpl implements RentService {
         final Transport rentedTransport = transportRepository.findById(transportId)
                 .orElseThrow(() -> new EntityNotFoundException("Transport for rent is not found"));
 
-        if (normalizedTypeOfRent.equals(UtilVarsConfig.MINUTES)) {
+        if (UtilVarsConfig.MINUTES.equals(normalizedTypeOfRent)) {
             price = rentedTransport.getMinutePrice();
-        } else if (normalizedTypeOfRent.equals(UtilVarsConfig.DAYS)) {
+        } else if (UtilVarsConfig.DAYS.equals(normalizedTypeOfRent)) {
             price = rentedTransport.getDayPrice();
         } else {
             throw new InvalidRentTypeException("Invalid rent type: " + normalizedTypeOfRent);
@@ -141,25 +141,25 @@ public class RentServiceImpl implements RentService {
      * Метод для заканчивания аренды.
      */
     @Override
-    public void endRent(Long rentId, Double latitude, Double longitude) {
-        Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
+    public void endRent(final Long rentId, final Double latitude, final Double longitude) {
+        final Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
 
-        User user = AuthenticationService.getUserFromSecurityContext();
+        final User user = AuthenticationService.getUserFromSecurityContext();
         if (!user.equals(rent.getUser())) {
             throw new OwnerMismatchException("Only owner can end his rent");
         }
 
-        Transport transport = rent.getTransport();
+        final Transport transport = rent.getTransport();
         transport.setLatitude(latitude);
         transport.setLongitude(longitude);
 
         rent.setTimeEnd(LocalDateTime.now());
-        Duration rentDuration = Duration.between(rent.getTimeStart(), rent.getTimeEnd());
-        String rentType = rent.getPriceType();
+        final Duration rentDuration = Duration.between(rent.getTimeStart(), rent.getTimeEnd());
+        final String rentType = rent.getPriceType();
 
-        if (rentType.equals(UtilVarsConfig.MINUTES)) {
+        if (UtilVarsConfig.MINUTES.equals(rentType)) {
             rent.setFinalPrice(transport.getMinutePrice() * rentDuration.toMinutes());
-        } else if (rentType.equals(UtilVarsConfig.DAYS)) {
+        } else if (UtilVarsConfig.DAYS.equals(rentType)) {
             long days = rentDuration.toDays();
             if (days == 0) {
                 days = 1;
