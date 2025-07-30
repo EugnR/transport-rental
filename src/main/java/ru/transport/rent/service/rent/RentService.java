@@ -2,6 +2,7 @@ package ru.transport.rent.service.rent;
 
 import java.util.List;
 
+import ru.transport.rent.dto.rent.RequestRentDetailsDTO;
 import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
 
 /**
@@ -40,4 +41,9 @@ public interface RentService {
      * Метод для заканчивания аренды.
      */
     void endRent(Long rentId, Double latitude, Double longitude);
+
+    /**
+     * Метод для возвращения информации об аренде.
+     */
+    RequestRentDetailsDTO getRentDetails(Long rentId);
 }
