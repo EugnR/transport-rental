@@ -26,7 +26,7 @@ public class RentController {
     @GetMapping("/Transport")
     public ResponseEntity<?> getTransportAround(
             @RequestParam final Double lat,
-            @RequestParam final Double lon,
+            @RequestParam("long") final Double lon,
             @RequestParam final Double radius,
             @RequestParam final String type) {
         return ResponseEntity.ok().body(rentService.findAvailableTransport(lat, lon, radius, type));
@@ -41,4 +41,15 @@ public class RentController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Эндпоинт для завершения аренды.
+     */
+    @PostMapping("/End/{rentId}")
+    public ResponseEntity<?> endRent(
+            @PathVariable final Long rentId,
+            @RequestParam final Double lat,
+            @RequestParam("long") final Double lon) {
+        rentService.endRent(rentId, lat, lon);
+        return ResponseEntity.ok().build();
+    }
 }
