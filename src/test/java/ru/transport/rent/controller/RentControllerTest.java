@@ -253,14 +253,14 @@ public class RentControllerTest extends AbstractMainTest {
     void testShouldGetRentInfoToRenter() throws Exception {
         //region register 1'st user & his car, register 2nd user and create rent
         String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
-        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport2.json");
         final List<Transport> allTransport = transportRepository.findAll();
         Transport transport = allTransport.get(0);
         Long transportId = transport.getId();
-        Double transportDayPrice = transport.getDayPrice();
+        Double transportMinutePrice = transport.getMinutePrice();
 
         String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
-        createRent(jwtUser2, "1", "Days");
+        createRent(jwtUser2, "1", "Minutes");
         final List<User> allUsers = userRepository.findAll();
         Long userId2 = allUsers.get(1).getId();
 
@@ -286,8 +286,8 @@ public class RentControllerTest extends AbstractMainTest {
                     Assertions.assertTrue(startingTime.isBefore(LocalDateTime.now().plusSeconds(5)));
                 })
                 .andExpect(MockMvcResultMatchers.jsonPath("$.timeEnd").value((Object) null))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.priceOfUnit").value(transportDayPrice))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.priceType").value("Days"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceOfUnit").value(transportMinutePrice))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceType").value("Minutes"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.finalPrice").value((Object) null));
     }
 
