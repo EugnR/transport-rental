@@ -180,12 +180,11 @@ public class RentServiceImpl implements RentService {
      * Метод для возвращения информации об аренде.
      */
     @Override
-    public RequestRentDetailsDTO getRentDetails(Long rentId) {
-        Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
-
-        User user = AuthenticationService.getUserFromSecurityContext();
-        User owner = rent.getTransport().getOwner();
-        User renter = rent.getUser();
+    public RequestRentDetailsDTO getRentDetails(final Long rentId) {
+        final Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
+        final User user = AuthenticationService.getUserFromSecurityContext();
+        final User owner = rent.getTransport().getOwner();
+        final User renter = rent.getUser();
 
         if (!user.equals(owner) && !user.equals(renter)) {
             throw new OwnerMismatchException("Only owner of rented transport or its renter can get rent information");

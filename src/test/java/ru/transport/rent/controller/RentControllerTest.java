@@ -32,7 +32,7 @@ public class RentControllerTest extends AbstractMainTest {
     TransportRepository transportRepository;
     @Autowired
     UserRepository userRepository;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private     final ObjectMapper objectMapper = new ObjectMapper();
 
     private String signUpAndSignInUser(final String regJsonPath, final String authJsonPath) throws Exception {
         final String userRegistrationJson = CommonUtils
@@ -219,7 +219,6 @@ public class RentControllerTest extends AbstractMainTest {
         String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
         createRent(jwtUser2, "1", "Days");
         final List<User> allUsers = userRepository.findAll();
-        Long userId1 = allUsers.get(0).getId();
         Long userId2 = allUsers.get(1).getId();
 
         final List<Rent> allRents = rentRepository.findAll();
@@ -263,7 +262,6 @@ public class RentControllerTest extends AbstractMainTest {
         String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
         createRent(jwtUser2, "1", "Days");
         final List<User> allUsers = userRepository.findAll();
-        Long userId1 = allUsers.get(0).getId();
         Long userId2 = allUsers.get(1).getId();
 
         final List<Rent> allRents = rentRepository.findAll();
@@ -299,16 +297,9 @@ public class RentControllerTest extends AbstractMainTest {
         //region register 1'st user & his car, register 2nd user and create rent
         String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
         registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
-        final List<Transport> allTransport = transportRepository.findAll();
-        Transport transport = allTransport.get(0);
-        Long transportId = transport.getId();
-        Double transportDayPrice = transport.getDayPrice();
 
         String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
         createRent(jwtUser2, "1", "Days");
-        final List<User> allUsers = userRepository.findAll();
-        Long userId1 = allUsers.get(0).getId();
-        Long userId2 = allUsers.get(1).getId();
 
         final List<Rent> allRents = rentRepository.findAll();
         Assertions.assertEquals(1, allRents.size());
