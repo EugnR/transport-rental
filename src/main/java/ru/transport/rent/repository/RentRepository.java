@@ -25,4 +25,9 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
      */
     List<Rent> findByUserId(Long userId);
 
+    /**
+     * Получение списка аренд по id пользователя.
+     */
+    List<Rent> findByUserIdOrderByTimeStartDesc(Long userId);
+
 }

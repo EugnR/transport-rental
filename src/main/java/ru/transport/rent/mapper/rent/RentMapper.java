@@ -15,4 +15,6 @@ public interface RentMapper {
     @Mapping(source = "transport.id", target = "transportId")
     @Mapping(source = "user.id", target = "userId")
     RequestRentDetailsDTO mapRentToRequestRentDetailsDto(Rent rent);
+
+
 }
