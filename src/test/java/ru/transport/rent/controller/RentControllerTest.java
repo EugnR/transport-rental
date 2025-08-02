@@ -1,5 +1,6 @@
 package ru.transport.rent.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -11,12 +12,17 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import ru.transport.rent.AbstractMainTest;
 import ru.transport.rent.CommonUtils;
 import ru.transport.rent.entity.Rent;
 import ru.transport.rent.entity.Transport;
+import ru.transport.rent.entity.User;
 import ru.transport.rent.repository.RentRepository;
 import ru.transport.rent.repository.TransportRepository;
+import ru.transport.rent.repository.UserRepository;
+
 
 public class RentControllerTest extends AbstractMainTest {
 
@@ -24,6 +30,9 @@ public class RentControllerTest extends AbstractMainTest {
     RentRepository rentRepository;
     @Autowired
     TransportRepository transportRepository;
+    @Autowired
+    UserRepository userRepository;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private String signUpAndSignInUser(final String regJsonPath, final String authJsonPath) throws Exception {
         final String userRegistrationJson = CommonUtils
@@ -194,5 +203,123 @@ public class RentControllerTest extends AbstractMainTest {
                 .param("lat", "55.7539939")
                 .param("long", "37.6220930")
         ).andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("getting rent info by owner")
+    void testShouldGetRentInfoToOwner() throws Exception {
+        //region register 1'st user & his car, register 2nd user and create rent
+        String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        final List<Transport> allTransport = transportRepository.findAll();
+        Transport transport = allTransport.get(0);
+        Long transportId = transport.getId();
+        Double transportDayPrice = transport.getDayPrice();
+
+        String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
+        createRent(jwtUser2, "1", "Days");
+        final List<User> allUsers = userRepository.findAll();
+        Long userId1 = allUsers.get(0).getId();
+        Long userId2 = allUsers.get(1).getId();
+
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(1, allRents.size());
+        Long rentId = allRents.get(0).getId();
+        //endregion
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/Rent/" + rentId)
+                .header("Authorization", "Bearer " + jwtUser1)
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transportId").value(transportId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId2))
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    JsonNode root = objectMapper.readTree(json);
+                    LocalDateTime startingTime = LocalDateTime.parse(root.get("timeStart").asText());
+
+                    Assertions.assertTrue(startingTime.isAfter(LocalDateTime.now().minusSeconds(5)));
+                    Assertions.assertTrue(startingTime.isBefore(LocalDateTime.now().plusSeconds(5)));
+                })
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timeEnd").value((Object) null))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceOfUnit").value(transportDayPrice))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceType").value("Days"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.finalPrice").value((Object) null));
+    }
+
+    @Test
+    @DisplayName("getting rent info by renter")
+    void testShouldGetRentInfoToRenter() throws Exception {
+        //region register 1'st user & his car, register 2nd user and create rent
+        String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        final List<Transport> allTransport = transportRepository.findAll();
+        Transport transport = allTransport.get(0);
+        Long transportId = transport.getId();
+        Double transportDayPrice = transport.getDayPrice();
+
+        String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
+        createRent(jwtUser2, "1", "Days");
+        final List<User> allUsers = userRepository.findAll();
+        Long userId1 = allUsers.get(0).getId();
+        Long userId2 = allUsers.get(1).getId();
+
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(1, allRents.size());
+        Long rentId = allRents.get(0).getId();
+        //endregion
+
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/Rent/" + rentId)
+                                .header("Authorization", "Bearer " + jwtUser2)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.transportId").value(transportId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(userId2))
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    JsonNode root = objectMapper.readTree(json);
+                    LocalDateTime startingTime = LocalDateTime.parse(root.get("timeStart").asText());
+
+                    Assertions.assertTrue(startingTime.isAfter(LocalDateTime.now().minusSeconds(5)));
+                    Assertions.assertTrue(startingTime.isBefore(LocalDateTime.now().plusSeconds(5)));
+                })
+                .andExpect(MockMvcResultMatchers.jsonPath("$.timeEnd").value((Object) null))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceOfUnit").value(transportDayPrice))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.priceType").value("Days"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.finalPrice").value((Object) null));
+    }
+
+    @Test
+    @DisplayName("making sure that others can't get rent info")
+    void testShouldNotLetGetRentInfoToOthers() throws Exception {
+        //region register 1'st user & his car, register 2nd user and create rent
+        String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        final List<Transport> allTransport = transportRepository.findAll();
+        Transport transport = allTransport.get(0);
+        Long transportId = transport.getId();
+        Double transportDayPrice = transport.getDayPrice();
+
+        String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
+        createRent(jwtUser2, "1", "Days");
+        final List<User> allUsers = userRepository.findAll();
+        Long userId1 = allUsers.get(0).getId();
+        Long userId2 = allUsers.get(1).getId();
+
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(1, allRents.size());
+        Long rentId = allRents.get(0).getId();
+        //endregion
+
+        String jwtUser3 = signUpAndSignInUser("user-controller/RequestRegistrationUser3.json", "user-controller/RequestSignInUser3.json");
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/Rent/" + rentId)
+                                .header("Authorization", "Bearer " + jwtUser3)
+                )
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 }

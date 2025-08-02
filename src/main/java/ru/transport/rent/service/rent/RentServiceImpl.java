@@ -187,7 +187,7 @@ public class RentServiceImpl implements RentService {
         User owner = rent.getTransport().getOwner();
         User renter = rent.getUser();
 
-        if (!user.equals(owner) && !owner.equals(renter)) {
+        if (!user.equals(owner) && !user.equals(renter)) {
             throw new OwnerMismatchException("Only owner of rented transport or its renter can get rent information");
         }
 
