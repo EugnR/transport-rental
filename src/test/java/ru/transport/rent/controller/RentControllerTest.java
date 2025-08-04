@@ -331,7 +331,7 @@ public class RentControllerTest extends AbstractMainTest {
         mockMvc.perform(
                         MockMvcRequestBuilders.get("/api/Rent/MyHistory")
                 )
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public class CustomExceptionHandler {
 
+
+
     /**
      * Обработчик SelfRentalNotAllowedException для случаев, когда пользователь пытается арендовать собственный транспорт.
      */
