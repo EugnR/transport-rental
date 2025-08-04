@@ -198,7 +198,7 @@ public class RentServiceImpl implements RentService {
      */
     @Override
     public List<RequestRentDetailsDTO> getUserRentHistory() {
-        User user = AuthenticationService.getUserFromSecurityContext();
+        final User user = AuthenticationService.getUserFromSecurityContext();
 
         return rentRepository.findByUserIdOrderByTimeStartDesc(user.getId())
                 .stream()
