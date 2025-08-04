@@ -52,4 +52,12 @@ public class RentController {
         rentService.endRent(rentId, lat, lon);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Эндпоинт для получения информации об аренде.
+     */
+    @GetMapping("/{rentId}")
+    public ResponseEntity<?> getRentDetails(@PathVariable final Long rentId) {
+        return ResponseEntity.ok().body(rentService.getRentDetails(rentId));
+    }
 }

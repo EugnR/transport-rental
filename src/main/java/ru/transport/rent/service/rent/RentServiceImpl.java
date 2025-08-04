@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.transport.rent.config.TransportTypesConfig;
 import ru.transport.rent.config.UtilVarsConfig;
+import ru.transport.rent.dto.rent.RequestRentDetailsDTO;
 import ru.transport.rent.dto.rent.TransportAroundInfoDTO;
 import ru.transport.rent.entity.Rent;
 import ru.transport.rent.entity.Transport;
@@ -17,6 +18,8 @@ import ru.transport.rent.entity.User;
 import ru.transport.rent.exceptions.InvalidRentTypeException;
 import ru.transport.rent.exceptions.InvalidTransportTypeException;
 import ru.transport.rent.exceptions.OwnerMismatchException;
+import ru.transport.rent.exceptions.SelfRentalNotAllowedException;
+import ru.transport.rent.mapper.rent.RentMapper;
 import ru.transport.rent.mapper.transport.TransportMapper;
 import ru.transport.rent.repository.RentRepository;
 import ru.transport.rent.repository.TransportRepository;
@@ -34,6 +37,7 @@ public class RentServiceImpl implements RentService {
     private final TransportTypesConfig transportTypesConfig;
     private final TransportRepository transportRepository;
     private final RentRepository rentRepository;
+    private final RentMapper rentMapper;
 
     /**
      * Метод валидирует полученный тип транспорта и выбирает какой поиск производить, а также переводит метры в километры.
@@ -118,7 +122,7 @@ public class RentServiceImpl implements RentService {
         final User user = AuthenticationService.getUserFromSecurityContext();
 
         if (rentedTransport.getOwner().equals(user)) {
-            throw new OwnerMismatchException("Owner can't rent his own transport");
+            throw new SelfRentalNotAllowedException("Owner can't rent his own transport");
         }
 
         rentedTransport.setCanBeRented(false);
@@ -170,5 +174,22 @@ public class RentServiceImpl implements RentService {
         transport.setCanBeRented(true);
         transportRepository.save(transport);
         rentRepository.save(rent);
+    }
+
+    /**
+     * Метод для возвращения информации об аренде.
+     */
+    @Override
+    public RequestRentDetailsDTO getRentDetails(final Long rentId) {
+        final Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new EntityNotFoundException("Rent is not found"));
+        final User user = AuthenticationService.getUserFromSecurityContext();
+        final User owner = rent.getTransport().getOwner();
+        final User renter = rent.getUser();
+
+        if (!user.equals(owner) && !user.equals(renter)) {
+            throw new OwnerMismatchException("Only owner of rented transport or its renter can get rent information");
+        }
+
+        return rentMapper.mapRentToRequestRentDetailsDto(rent);
     }
 }
