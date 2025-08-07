@@ -89,5 +89,13 @@ public class CommonUtils {
             return null;
         }
     }
-
+    public static void printPrettyJson(String rawJson) {
+        try {
+            Object jsonContent = objectMapper.readValue(rawJson, Object.class);
+            String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonContent);
+            System.out.println(prettyJson);
+        } catch (Exception e) {
+            System.out.println("Не удалось распарсить JSON: " + rawJson);
+        }
+    }
 }

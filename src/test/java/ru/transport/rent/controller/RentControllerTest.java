@@ -32,7 +32,7 @@ public class RentControllerTest extends AbstractMainTest {
     TransportRepository transportRepository;
     @Autowired
     UserRepository userRepository;
-    private     final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private String signUpAndSignInUser(final String regJsonPath, final String authJsonPath) throws Exception {
         final String userRegistrationJson = CommonUtils
@@ -72,6 +72,17 @@ public class RentControllerTest extends AbstractMainTest {
                         MockMvcRequestBuilders.post("/api/Rent/New/" + transportId)
                                 .header("Authorization", "Bearer " + jwt)
                                 .param("rentType", rentType)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private void endRent(final String jwt, final Long rentId) throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/Rent/End/" + rentId)
+                                .header("Authorization", "Bearer " + jwt)
+                                .param("lat", "55.7539939")
+                                .param("long", "37.6220930")
                 )
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -312,5 +323,49 @@ public class RentControllerTest extends AbstractMainTest {
                                 .header("Authorization", "Bearer " + jwtUser3)
                 )
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("making sure that only authorized user can get rent history")
+    void testShouldNotLetGetRentHistoryToUnauthorized() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/Rent/MyHistory")
+                )
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("getting user rent history")
+    void testShouldGetRentHistory() throws Exception {
+          //region register 1'st user & his car, register 2nd user and create+end 2 rents
+        String jwtUser1 = signUpAndSignInUser("user-controller/RequestRegistrationUser.json", "user-controller/RequestSignInUser.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport.json");
+        registerTransport(jwtUser1, "transport-controller/RequestRegisterTransport2.json");
+
+        String jwtUser2 = signUpAndSignInUser("user-controller/RequestRegistrationUser2.json", "user-controller/RequestSignInUser2.json");
+        createRent(jwtUser2, "1", "Days");
+        createRent(jwtUser2, "2", "Minutes");
+        final List<Rent> allRents = rentRepository.findAll();
+        Assertions.assertEquals(2, allRents.size());
+        allRents.stream()
+                .forEach(rent -> {
+                    try {
+                        endRent(jwtUser2, rent.getId());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        //endregion
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/Rent/MyHistory")
+                        .header("Authorization", "Bearer " + jwtUser2)
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+                .andDo(result -> {
+                   String json = result.getResponse().getContentAsString();
+                   CommonUtils.printPrettyJson(json);
+                });
     }
 }

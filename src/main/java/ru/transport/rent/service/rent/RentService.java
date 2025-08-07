@@ -46,4 +46,9 @@ public interface RentService {
      * Метод для возвращения информации об аренде.
      */
     RequestRentDetailsDTO getRentDetails(Long rentId);
+
+    /**
+     * Метод для получения истории аренд пользователя.
+     */
+    List<RequestRentDetailsDTO> getUserRentHistory();
 }

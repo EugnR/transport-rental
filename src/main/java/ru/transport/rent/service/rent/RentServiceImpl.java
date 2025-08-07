@@ -192,4 +192,17 @@ public class RentServiceImpl implements RentService {
 
         return rentMapper.mapRentToRequestRentDetailsDto(rent);
     }
+
+    /**
+     * Метод для получения истории аренд пользователя.
+     */
+    @Override
+    public List<RequestRentDetailsDTO> getUserRentHistory() {
+        final User user = AuthenticationService.getUserFromSecurityContext();
+
+        return rentRepository.findByUserIdOrderByTimeStartDesc(user.getId())
+                .stream()
+                .map(rentMapper::mapRentToRequestRentDetailsDto)
+                .toList();
+    }
 }

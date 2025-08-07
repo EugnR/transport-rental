@@ -60,4 +60,12 @@ public class RentController {
     public ResponseEntity<?> getRentDetails(@PathVariable final Long rentId) {
         return ResponseEntity.ok().body(rentService.getRentDetails(rentId));
     }
+
+    /**
+     * Эндпоинт для получения истории аренд пользователя.
+     */
+    @GetMapping("/MyHistory")
+    public ResponseEntity<?> getUserRentHistory() {
+        return ResponseEntity.ok().body(rentService.getUserRentHistory());
+    }
 }
